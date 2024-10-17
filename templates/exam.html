@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <form method="POST" action="/workreport">
+        <!-- Date Selection -->
+        <label for="date">Date:</label>
+        <input type="date" id="date" name="date" value="2024-10-08" required><br><br> <!-- Default value is 08-10-2024 -->
+    
+        <!-- Start Time Selection -->
+        <label for="start_time">Start Time:</label>
+        <select id="start_time" name="start_time" required>
+            <option value="">--Select Start Time--</option>
+            {% for hour in range(24) %}
+            <option value="{{ "%02d:00"|format(hour) }}">{{ "%02d:00"|format(hour) }}</option>
+            <option value="{{ '%02d:30'|format(hour) }}">{{ '%02d:30'|format(hour) }}</option>
+            {% endfor %}
+        </select><br><br>
+    
+        <!-- End Time Selection -->
+        <label for="end_time">End Time:</label>
+        <select id="end_time" name="end_time" required>
+            <option value="">--Select End Time--</option>
+            {% for hour in range(24) %}
+                <option value="{{ '%02d:00'|format(hour) }}">{{ '%02d:00'|format(hour) }}</option>
+                <option value="{{ '%02d:30'|format(hour) }}">{{ '%02d:30'|format(hour) }}</option>
+            {% endfor %}
+        </select><br><br>
+    
+        <!-- Work Done Section -->
+        <label for="workdone">Work Done:</label>
+        <textarea id="workdone" name="workdone" required></textarea><br><br>
+    
+        <!-- Submit Button -->
+        <input type="submit" value="Submit">
+    </form>
+    
+</body>
+</html>

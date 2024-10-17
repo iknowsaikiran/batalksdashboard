@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    {% include 'header.html' %}
+    <style>
+        .col-md-8 {
+            margin-left: 260px;
+        }
+
+        /* Adjust the width of the date inputs */
+        input[type="date"] {
+            width: 220px;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+        }
+
+        .payslip-container {
+            width: 90%;
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            background-color: #fff;
+            position: relative;
+            overflow: hidden;
+            page-break-inside: avoid;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .header .company-info {
+            text-align: left;
+        }
+
+        .header .company-info h2 {
+            margin: 0;
+            color: #333;
+        }
+
+        .header .company-info p {
+            margin: 2px 0;
+            color: #777;
+        }
+
+        .employee-summary,
+        .earnings-deductions,
+        .total-net-payable {
+            border: 1px solid #ccc;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            padding: 10px;
+            background-color: #f9f9f9;
+        }
+
+        .employee-summary h6,
+        .earnings-deductions h6,
+        .total-net-payable h6 {
+            margin-top: 0;
+        }
+
+        .employee-summary table,
+        .earnings-deductions table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .employee-summary td,
+        .earnings-deductions td,
+        .total-net-payable td {
+            padding: 5px;
+
+            border: 1px solid #ccc;
+
+
+        }
+
+        .net-pay {
+            text-align: center;
+            background-color: #cbfadd;
+            padding: 10px;
+            border-radius: 5px;
+        }
+
+        .net-pay h1 {
+            margin: 0;
+            color: #00796b;
+        }
+
+        .earnings-deductions {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+        }
+
+        .earnings-deductions .earnings,
+        .earnings-deductions .deductions {
+            width: 100%;
+            margin-bottom: 20px;
+        }
+
+        @media(min-width: 600px) {
+
+            .earnings-deductions .earnings,
+            .earnings-deductions .deductions {
+                width: 48%;
+                margin-bottom: 0;
+            }
+        }
+
+        .total-net-payable {
+            text-align: left;
+            background-color: #e8f5e9;
+            padding: 10px;
+            border-radius: 5px;
+        }
+
+        .note {
+            font-size: 11px;
+            color: #666;
+            text-align: center;
+            margin-top: 20px;
+
+        }
+
+        .download-button {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .download-button button {
+            padding: 10px 20px;
+            font-size: 1rem;
+            cursor: pointer;
+            border: none;
+            background-color: #007bff;
+            color: #fff;
+            border-radius: 5px;
+        }
+
+        .download-button button:hover {
+            background-color: #fff;
+            color: #007bff;
+        }
+
+        .watermark {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(-20deg);
+            opacity: 0.2;
+            z-index: 1;
+            width: 57%;
+            height: 40%;
+            background: url('/static/assets/img/logo.jpeg') center center no-repeat;
+            background-size: 100%;
+            /* Adjust size for better visibility */
+        }
+    </style>
+</head>
+
+<body class="g-sidenav-show bg-gray-100">
+    <div class="payslip-container" id="payslip">
+        <div class="watermark"></div>
+        <div class="header">
+            <div class="company-info">
+                <h6>BA Talks Pvt Ltd</h6>
+                <p>500049 India</p>
+            </div>
+            <div>
+                <img style="height: 70px;" src="/static/assets/img/logo.jpeg" width="208" height="55" alt="logo">
+            </div>
+            <div class="payslip-info">
+                <h6>Payslip For the Month</h6>
+                <h6>&nbsp;&nbsp;&nbsp;July 2024</h6>
+            </div>
+        </div>
+        <div class="employee-summary">
+            <h6>EMPLOYEE SUMMARY</h6>
+            <table>
+                <tr>
+                    <td>Employee Name</td>
+
+                    <td>{{ user[2] }}</td>
+                    <td rowspan="5" class="net-pay">
+                        <h3> ₹ {{ payslip[14] }} </h3>
+                        <p>Employee Net Pay</p>
+                        <!-- <p>Paid Days: 22</p>
+                        <p>LOP Days: 0</p> -->
+                    </td>
+                </tr>
+                <tr>
+                    <td>Employee ID</td>
+
+                    <td>{{ user[1] }}</td>
+                </tr>
+
+                <tr>
+                    <td>Pay Period</td>
+
+                    <td>{{ payslip[3] }}</td>
+                </tr>
+                <tr>
+                    <td>Pay Date</td>
+
+                    <td>{{ payslip[4] }}</td>
+                </tr>
+
+                <tr>
+                    <td>UAN</td>
+
+                    <td>{{ user[15] }}</td>
+                </tr>
+                <tr>
+                    <td>PAN</td>
+
+                    <td>{{ user[16] }}</td>
+                </tr>
+                <tr>
+                    <td>Bank Name</td>
+
+                    <td>{{ user[17] }}</td>
+                </tr>
+                <tr>
+                    <td>Branch</td>
+
+                    <td>{{ user[18] }}</td>
+                </tr>
+                <tr>
+                    <td>Account Number</td>
+
+                    <td>{{ user[19] }}</td>
+                </tr>
+            </table>
+        </div>
+        <div class="earnings-deductions">
+            <div class="earnings">
+                <h6>EARNINGS</h6>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Particulars </th>
+                            <th>AMOUNT</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                        <tr>
+                            <td>Basic Pay</td>
+                            <td style="text-align: center;">₹ {{ payslip[5] }}</td>
+                        </tr>
+                        <tr>
+                            <td>House Rent Allowance (HRA)</td>
+                            <td style="text-align: center;">₹ {{ payslip[6] }}</td>
+                        </tr>
+                        <tr>
+                            <td>Medical Allowance</td>
+                            <td style="text-align: center;">₹ {{ payslip[7] }}</td>
+                        </tr>
+                        <tr>
+                            <td>Conveyance Allowance</td>
+                            <td style="text-align: center;">₹ {{ payslip[8] }}</td>
+                        </tr>
+
+                        <tr>
+                            <td>Other Allowance</td>
+                            <td style="text-align: center;">₹ {{ payslip[9] }}</td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <h6>Gross Earnings</h6>
+                            </td>
+                            <td>
+                                <h6 style="text-align: center;">₹ {{ payslip[10] }}</h6>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="deductions">
+                <h6>DEDUCTIONS</h6>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Particulars</th>
+                            <th>AMOUNT</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Professional Tax</td>
+                            <td style="text-align: center;">₹ {{ payslip[11] }}</td>
+                        </tr>
+                        <tr>
+                            <td>Provident Fund</td>
+                            <td style="text-align: center;">₹ {{ payslip[12] }}</td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <h6>Total Deductions</h6>
+                            </td>
+                            <td>
+                                <h6 style="text-align: center;">₹ {{ payslip[13] }}</h6>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="total-net-payable">
+            <h6>TOTAL NET PAYABLE</h6>
+            <table>
+                <tr>
+                    <td>Total Earnings</td>
+                    <td id="total-earnings">₹ {{ payslip[10] }}</td>
+                </tr>
+                <tr>
+                    <td>Total Deductions</td>
+                    <td id="total-deductions">₹ {{ payslip[13] }}</td>
+                </tr>
+                <tr>
+                    <td>Net Payable</td>
+                    <td id="net-payable" name="np">₹ {{ payslip[14] }}</td>
+                </tr>
+            </table>
+        </div>
+        <div class="note">
+            <p>-- This is a system generated payslip, hence the signature is not required. --</p>
+        </div>
+    </div>
+
+    <!-- <div class="download-button">
+        <button onclick="downloadPayslipAsPDF()">Download Payslip as PDF</button>
+    </div> -->
+
+
+    <!-- Core JS Files -->
+    <script src="static/assets/js/core/popper.min.js"></script>
+    <script src="static/assets/js/core/bootstrap.min.js"></script>
+    <script src="static/assets/js/plugins/perfect-scrollbar.min.js"></script>
+    <script src="static/assets/js/plugins/smooth-scrollbar.min.js"></script>
+    <script>
+        function downloadPayslipAsPDF() {
+            const element = document.getElementById('payslip');
+            html2pdf(element, {
+                margin: 0,
+                filename: 'payslip.pdf',
+                image: { type: 'jpeg', quality: 0.99 },
+                html2canvas: { scale: 3.54 },
+                jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+            });
+        }
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.2/html2pdf.bundle.min.js"></script>
+</body>
+
+</html>

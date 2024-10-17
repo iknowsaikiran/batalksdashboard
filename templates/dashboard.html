@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="ut-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="apple-touch-icon" sizes="76x76" href="static/assets/img/apple-icon.png">
+    <link rel="icon" type="image/png" href="static/assets/img/favicon.png">
+    <title>
+        In House page For BA talks Pvt Ltd
+    </title>
+    <!--     Fonts and icons     -->
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet" />
+    <!-- Nucleo Icons -->
+    <link href="static/assets/css/nucleo-icons.css" rel="stylesheet" />
+    <link href="static/assets/css/nucleo-svg.css" rel="stylesheet" />
+    <!-- Font Awesome Icons -->
+    <script src="https://kit.fontawesome.com/42d5adcbca.js" crossorigin="anonymous"></script>
+    <link href="static/assets/css/nucleo-svg.css" rel="stylesheet" />
+    <!-- CSS Files -->
+    <link id="pagestyle" href="static/assets/css/argon-dashboard.css?v=2.0.4" rel="stylesheet" />
+    <title>Dashboard</title>
+</head>
+
+<body>
+    <h1>Welcome to Dashboard</h1>
+    <p>Hello, {{ session['username'] }}!</p>
+    <p><a href="/logout">Logout</a></p>
+
+    <h2>Users Data</h2>
+    <table class="table align-items-center mb-0">
+        <thead>
+            <tr>
+                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">ID</th>
+                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Username</th>
+                <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Password
+                </th>
+                <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Designation
+                </th>
+                <th class="text-secondary opacity-7">Employed On</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for user in users %}
+            <tr>
+                <td class="mb-0 text-sm">{{ user[0] }}</td>
+                <td class="justify-content-center">{{ user[1] }}</td>
+                <td class="justify-content-center">{{ user[2] }}</td>
+                <td class="justify-content-center">{{ user[3] }}</td>
+                <td class="justify-content-center">{{ user[4] }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+
+</html>

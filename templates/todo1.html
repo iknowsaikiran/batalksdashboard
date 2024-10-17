@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <title>
+        Argon Dashboard 2 by Creative Tim
+    </title>
+    {% include 'header.html' %}
+    <style>
+        .col-md-8 {
+            margin-left: 260px;
+
+        }
+    </style>
+
+</head>
+
+<body class="g-sidenav-show   bg-gray-100">
+    <div class="min-height-300 bg-primary position-absolute w-100"></div>
+    <div class="main-content position-relative max-height-vh-100 h-100">
+
+    </div>
+    <div class="container-fluid py-4">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card">
+
+                    <div class="card-body">
+                        <p class="text-uppercase text-sm">Create todo</p>
+                        <form id="new-todo-form" action="/add_todo" method="post">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="example-text-input" class="form-control-label">Content</label>
+                                        <input class="form-control" type="text" name="content">
+                                    </div>
+                                </div>
+                                <div class="col-md-6"></div>
+
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="example-text-input" class="form-control-label">Pick a
+                                            category</label>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="example-text-input" class="form-control-label">Business</label>
+                                        <input type="radio" name="category" value="business">
+                                        <label for="example-text-input" class="form-control-label">Personal</label>
+                                        <input type="radio" name="category" value="personal">
+                                    </div>
+                                </div>
+                                <div class="col-md-6"></div>
+                                <div class="col-md-6">
+                                    <button class="btn btn-primary btn-sm ms-auto" type="submit">Add todo</button>
+
+                                </div>
+                        </form>
+                        <hr class="horizontal dark">
+                    </div>
+                    <div class="container-fluid py-4">
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="card mb-4">
+                                    <div class="card-header pb-0">
+                                        <h6>Todo List</h6>
+                                    </div>
+                                    <div class="card-body px-0 pt-0 pb-2">
+                                        <div class="table-responsive p-0">
+                                            <table class="table align-items-center mb-0">
+                                                <thead>
+                                                    <tr>
+                                                        <th></th>
+                                                        <th
+                                                            class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
+                                                            Sl.No</th>
+                                                        <th
+                                                            class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
+                                                            Content</th>
+                                                        <th
+                                                            class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
+                                                            Category</th>
+                                                        <th
+                                                            class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
+                                                            Completed</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody class="todo-list">
+                                                    {% for todo in todos %}
+                                                    <div class="todo-item {% if todo[3] %}completed{% endif %}"
+                                                        id="todo-{{ todo[0] }}">
+                                                        <form id="edit-todo-form-{{ todo[0] }}"
+                                                            action="/edit_todo/{{ todo[0] }}" method="post">
+
+                                                            <tr>
+                                                                <div class="todo-content">
+                                                                    <td></td>
+                                                                    <td>{{
+                                                                        loop.index }}</td>
+                                                                    <td class="justify-content-center ">
+                                                                        <input type="text" name="content"
+                                                                            value="{{ todo[1] }}" {% if todo[3]
+                                                                            %}readonly{% endif %} />
+                                                                    </td>
+
+                                                                    <td class="justify-content-center "><select
+                                                                            name="category" {% if todo[3] %}disabled{%
+                                                                            endif %}>
+                                                                            <option value="business" {% if
+                                                                                todo[2]=='business' %} selected {% endif
+                                                                                %}>
+                                                                                Business</option>
+                                                                            <option value="personal" {% if
+                                                                                todo[2]=='personal' %} selected {% endif
+                                                                                %}>
+                                                                                Personal</option>
+                                                                        </select></td>
+                                                                    </td>
+                                                                </div>
+                                                                <td class="justify-content-center">
+                                                                    <div class="todo-actions">
+                                                                        {% if not todo[3] %}
+                                                                        <button type="button" class="save-button"
+                                                                            onclick="saveTodo(`{{ todo[0] }}`)">Save</button>
+                                                                        <button type="button" class="delete-button"
+                                                                            onclick="deleteTodo(`{{ todo[0] }}`)">Delete</button>
+                                                                        <button type="button" class="complete-button"
+                                                                            onclick="markAsComplete(`{{ todo[0] }}`)">✓</button>
+                                                                        {% endif %}
+                                                                    </div>
+                                                                </td>
+
+
+
+
+                                                            </tr>
+                                                        </form>
+                                                    </div>
+                                                    {% endfor %}
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="/static/main.js"></script>
+
+
+</body>
+
+</html>

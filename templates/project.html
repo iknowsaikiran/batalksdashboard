@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    {% include 'header.html' %}
+    <style>
+        .col-md-8 {
+            margin-left: 260px;
+
+        }
+
+
+        /* Adjust the width of the date inputs */
+        input[type="date"] {
+            width: 220px;
+            /* You can adjust this value as needed */
+        }
+    </style>
+
+</head>
+
+<body class="g-sidenav-show   bg-gray-100">
+    <div class="min-height-300 bg-primary position-absolute w-100"></div>
+
+
+    <div class="container-fluid py-4">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-body">
+                        <p class="text-uppercase text-sm">Project details</p>
+                        <form method="POST">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="example-text-input" class="form-control-label">Project Title</label>
+                                        <input class="form-control" type="text" name="project_title" value="">
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <div class="form-group">
+                                            <!-- <label for="example-text-input" class="form-control-label">Start
+                                                date</label>
+                                            <input class="form-control" type="date" name="start_date" value=""> -->
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <div class="form-group">
+                                            <label for="example-text-input" class="form-control-label">Start
+                                                date</label>
+                                            <input class="form-control" type="date" name="start_date" value="">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="example-text-input" class="form-control-label">End Date</label>
+                                        <input class="form-control" type="date" name="end_date" value="">
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="example-text-input" class="form-control-label">Description</label>
+                                        <textarea class="form-control" name="description" rows="5" cols="30"
+                                            placeholder="Project description"></textarea>
+                                    </div>
+                                </div>
+                                <hr class="horizontal dark">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <button class="btn btn-primary btn-sm ms-auto" type="submit">Add
+                                            Project</button>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!--  Core JS Files   -->
+            <script src="static/assets/js/core/popper.min.js"></script>
+            <script src="static/assets/js/core/bootstrap.min.js"></script>
+            <script src="static/assets/js/plugins/perfect-scrollbar.min.js"></script>
+            <script src="static/assets/js/plugins/smooth-scrollbar.min.js"></script>
+            <script>
+                var win = navigator.platform.indexOf('Win') > -1;
+                if (win && document.querySelector('#sidenav-scrollbar')) {
+                    var options = {
+                        damping: '0.5'
+                    }
+                    Scrollbar.init(document.querySelector('#sidenav-scrollbar'), options);
+                }
+            </script>
+            <!-- Github buttons -->
+            <script async defer src="https://buttons.github.io/buttons.js"></script>
+            <!-- Control Center for Soft Dashboard: parallax effects, scripts for the example pages etc -->
+            <script src="static/assets/js/argon-dashboard.min.js?v=2.0.4"></script>
+
+</body>
+
+</html>

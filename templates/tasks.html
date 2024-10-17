@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    {% include 'header.html' %}
+    <style>
+        .col-md-8 {
+            margin-left: 260px;
+
+        }
+
+
+        /* Adjust the width of the date inputs */
+        input[type="date"] {
+            width: 220px;
+            /* You can adjust this value as needed */
+        }
+
+        .work {
+            content: center;
+            max-width: 300px;
+        }
+        .work button{
+            border-radius: 5px;
+            border: 7px;
+            color: gainsboro;
+        }
+        
+    </style>
+
+</head>
+
+<body class="g-sidenav-show   bg-gray-100">
+    <div class="min-height-300 bg-primary position-absolute w-100"></div>
+
+    <div class="container-fluid py-4">
+        <div class="row">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-body">
+                        <p>Tasks </p>
+                        <form method="POST">
+                            <div class="work">
+                                <label>Date</label><br />
+                                <input class="form-control" type="date" id="date" name="date" value="" required/>
+                                <label>Timings</label><br />
+                                <select class="form-control" name="Timings" id="timings">
+                                    <option value="" disabled selected>Select Timings</option>
+                                    <option value="9am to 10am">9am to 10am</option>
+                                    <option value="10am to 11am">10am to 11am</option>
+                                    <option value="11am to 12pm">11am to 12pm</option>
+                                    <option value="12pm to 1pm">12pm to 1pm</option>
+                                    <option value="1pm to 2pm">1pm to 2pm</option>
+                                    <option value="2pm to 3pm">2pm to 3pm</option>
+                                    <option value="3pm to 4pm">3pm to 4pm</option>
+                                    <option value="4pm to 4:30pm">4pm to 4:30pm</option>
+                                    <option value="4:30pm to 5pm">4:30pm to 5pm</option>
+                                    <option value="5pm to 6pm">5pm to 6pm</option>                                    
+                                </select>
+                                <select class="form-control" name="Timings" id="timings-int">
+                                    <option value="" disabled selected>Select Timings</option>
+                                    <option value="9am to 10am">9am to 10am</option>
+                                    <option value="10am to 11am">10am to 11am</option>
+                                    <option value="11am to 12pm">11am to 12pm</option>
+                                    <option value="12pm to 1pm">12pm to 12:30pm</option>
+                                    <option value="12:30pm to 1:30pm">12:30pm to 1:30pm</option>
+                                    <option value="1:30pm to 2pm">1:30pm to 2pm</option>
+                                    <option value="2pm to 3pm">2pm to 3pm</option>
+                                    <option value="3pm to 4pm">3pm to 4pm</option>
+                                    <option value="4pm to 4:30pm">4pm to 4:30pm</option>
+                                    <option value="4:30pm to 5pm">4:30pm to 5pm</option>
+                                    <option value="5pm to 6pm">5pm to 6pm</option>                                    
+                                </select>
+
+                                <label>Select User</label><br />
+                                <select id="usernameFilter" name="usernameFilter" class="form-control" onchange="filterTable()" {% if disable_filter %}disabled{% endif %}>
+                                    <option value="">Users</option>
+                                    {% for username in usernames %}
+                                    <option value="{{ username }}" {% if selected_username==username %}selected{% endif %}>
+                                        {{ username }}</option>
+                                    {% endfor %}
+                                </select>
+                                
+                                <label>Work Done</label><br />                                
+                                <textarea class="form-control" name="workdone" rows="5" cols="30"
+                                            placeholder="Work description" style="max-width: 500px;"></textarea>
+
+                                <button type="submit" class="bg-primary p-1 mt-2">Save</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        window.onload = function() {
+            var today = new Date();
+            var day = String(today.getDate()).padStart(2, '0');
+            var month = String(today.getMonth() + 1).padStart(2, '0'); // Months are zero-based
+            var year = today.getFullYear();
+            
+            // Format date as yyyy-mm-dd, required for the date input type
+            var formattedDate = year + '-' + month + '-' + day;
+            
+            // Set the current date as default in the date input field
+            document.getElementById('date').value = formattedDate;
+        };        
+    </script>
+</body>
+
+</html>

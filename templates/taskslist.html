@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    {% include 'header.html' %}
+    <style>
+        .container-fluid {
+            width: 100vw;
+        }
+
+        .col-md-8 {
+            margin-left: 260px;
+
+        }
+
+        .card.mb-4 {
+            margin-left: 260px;
+        }
+
+        .card-header {
+            display: inline-flex;
+            justify-content: space-between;
+        }
+
+        .card-header a {
+
+            color: #fff;
+            border-radius: 5px;
+
+        }
+
+        .fixed-table {
+            width: 100%;
+            /* Adjust the width as needed */
+            /* Ensures the table layout is fixed */
+        }
+
+        .workdone-column {
+            max-width: 350px;
+            /* Adjust the max width as needed */
+            word-wrap: break-word;
+            /* Allows breaking of words to fit within the column */
+            overflow-wrap: break-word;
+            /* Ensures long words will break onto the next line */
+            white-space: normal;
+            /* Ensures text will wrap */
+            padding: 10px;
+            /* Optional: Add some padding for better visibility */
+        }
+
+        .table-responsive {
+            overflow-x: auto;
+            /* Allow horizontal scrolling */
+        }
+
+        .table-responsive h6 {
+            margin-left: 2rem;
+        }
+
+        .filter-container {
+            margin-left: 1rem;
+            display: flex;
+        }
+
+        .filter-container select {
+            cursor: pointer;
+        }
+
+        /*.filter-container input{
+            cursor: pointer;
+        }*/
+        #usernameFilter {
+            width: 300px;
+        }
+
+        .download-button {
+            margin-top: 7%;
+        }
+
+        @media print {
+            .no-print {
+                display: none;
+            }
+        }
+
+        .timer-icons {
+            cursor: pointer;
+
+        }
+
+        .timer-icons .fa-play {
+            color: aqua;
+            margin-left: 0px;
+        }
+
+        .timer-icons .fa-pause {
+            color: orange;
+            margin-left: 10px;
+        }
+
+        .timer-icons .fa-check {
+            color: green;
+            margin-left: 10px;
+        }
+    </style>
+</head>
+
+<body class="g-sidenav-show bg-gray-100">
+    <div class="min-height-300 bg-primary position-absolute w-100"></div>
+
+    <div class="container-fluid py-4" id="workreport">
+        <div class="row">
+            <div class="col-12">
+                <div class="card mb-4">
+
+                    <div class="card-header pb-0">
+                        <h6>Tasks List of {{ session['username']|capitalize }} and Emp.Id is {{session['empid']}}
+                        </h6>
+                        <a href="/tasks" class="bg-primary p-2 ">Tasks</a>
+                    </div>
+
+                    <form method="POST" action="{{ url_for('workreportlist') }}">
+                        <div class="filter-container" style="margin-bottom: 20px;">
+                            <!-- Username Filter Dropdown -->
+                            <select id="usernameFilter" name="usernameFilter" class="form-select"
+                                onchange="filterTable()" {% if disable_filter %}disabled{% endif %}>
+                                <option value="">Users</option>
+                                {% for username in usernames %}
+                                <option value="{{ username }}" {% if selected_username==username %}selected{% endif %}>
+                                    {{ username }}</option>
+                                {% endfor %}
+                            </select>
+                            <!-- Date Filter Input -->
+                            <!-- <input type="date" id="dateFilter" name="dateFilter" class="form-control" value="{{ selected_date }}"
+                                style="width: 200px; margin-left: 10px; display: inline-block;" onchange="filterTable()" {% if disable_filter %}disabled{% endif %} /> -->
+                        </div>
+                    </form>
+
+                    <!-- Table content -->
+                    <div class="card-body px-0 pt-0 pb-2">
+                        <div class="table-responsive p-0 d-flex justify-content-center">
+                            {% if no_data %}
+                            <h6>No Data Found</h6>
+                            {% else %}
+                            <table class="table align-items-center mb-0 fixed-table">
+                                <thead>
+                                    <tr>
+                                        <th></th>
+                                        <th
+                                            class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
+                                            User name</th>
+                                        <th
+                                            class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
+                                            Date</th>
+                                        <th
+                                            class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
+                                            Timings</th>
+                                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2 workdone-column"
+                                            style="word-wrap:break-word;overflow-wrap:break-word;white-space: normal;">
+                                            Workdone</th>
+                                        <th
+                                            class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
+                                            Reporting Time</th>
+                                        <th
+                                            class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
+                                            TimerZone</th>
+                                        <th
+                                            class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
+                                            Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="workreportBody">
+                                    {% for pro in project %}
+                                    <tr>
+                                        <td></td>
+                                        <td class="justify-content-center">{{ pro[-1] }}</td>
+                                        <td class="justify-content-center">{{ pro[2] }}</td>
+                                        <td class="justify-content-center">{{ pro[3] }}</td>
+                                        <td class="justify-content-center workdone-column"
+                                            style="word-wrap:break-word;overflow-wrap:break-word;white-space: normal;">
+                                            {{ pro[4] }}</td>
+                                        <td class="justify-content-center">{{ pro[5] }}</td>
+
+                                        <!-- TimerZone icons with FontAwesome -->
+                                        <td>
+                                            <span class="timer-icons">
+                                                <i class="fa-solid fa-play" data-task-id="{{ pro.id }}"
+                                                    onclick="startTimer(this)"></i>
+                                                <i class="fa-solid fa-pause" data-task-id="{{ pro.id }}"
+                                                    style="display:none;" onclick="pauseTimer(this)"></i>
+                                                <i class="fa-solid fa-check" data-task-id="{{ pro.id }}"
+                                                    style="display:none;" onclick="doneTimer(this)"></i>
+                                            </span>
+                                            <span id="timer-display-{{ pro.id }}" class="timer-display"
+                                                style="display:block;">
+                                                {{ pro.timer_display }} <!-- Display initial timer value -->
+                                            </span>
+
+                                        </td>
+                                        <td></td>
+
+
+
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- <div class="download-button text-center no-print">
+            <button onclick="downloadWorkReportAsPDF() " class="btn btn-info">Download Work-Report as PDF</button>
+        </div> -->
+    </div>
+    </main>
+    <div class="fixed-plugin">
+        <a class="fixed-plugin-button text-dark position-fixed px-3 py-2">
+            <i class="fa fa-cog py-2"> </i>
+        </a>
+        <div class="card shadow-lg">
+            <div class="card-header pb-0 pt-3 ">
+                <div class="float-start">
+                    <h5 class="mt-3 mb-0">Argon Configurator</h5>
+                    <p>See our dashboard options.</p>
+                </div>
+                <div class="float-end mt-4">
+                    <button class="btn btn-link text-dark p-0 fixed-plugin-close-button">
+                        <i class="fa fa-close"></i>
+                    </button>
+                </div>
+                <!-- End Toggle Button -->
+            </div>
+            <hr class="horizontal dark my-1">
+            <div class="card-body pt-sm-3 pt-0 overflow-auto">
+                <!-- Sidebar Backgrounds -->
+                <div>
+                    <h6 class="mb-0">Sidebar Colors</h6>
+                </div>
+                <a href="javascript:void(0)" class="switch-trigger background-color">
+                    <div class="badge-colors my-2 text-start">
+                        <span class="badge filter bg-gradient-primary active" data-color="primary"
+                            onclick="sidebarColor(this)"></span>
+                        <span class="badge filter bg-gradient-dark" data-color="dark"
+                            onclick="sidebarColor(this)"></span>
+                        <span class="badge filter bg-gradient-info" data-color="info"
+                            onclick="sidebarColor(this)"></span>
+                        <span class="badge filter bg-gradient-success" data-color="success"
+                            onclick="sidebarColor(this)"></span>
+                        <span class="badge filter bg-gradient-warning" data-color="warning"
+                            onclick="sidebarColor(this)"></span>
+                        <span class="badge filter bg-gradient-danger" data-color="danger"
+                            onclick="sidebarColor(this)"></span>
+                    </div>
+                </a>
+                <!-- Sidenav Type -->
+                <div class="mt-3">
+                    <h6 class="mb-0">Sidenav Type</h6>
+                    <p class="text-sm">Choose between 2 different sidenav types.</p>
+                </div>
+                <div class="d-flex">
+                    <button class="btn bg-gradient-primary w-100 px-3 mb-2 active me-2" data-class="bg-white"
+                        onclick="sidebarType(this)">White</button>
+                    <button class="btn bg-gradient-primary w-100 px-3 mb-2" data-class="bg-default"
+                        onclick="sidebarType(this)">Dark</button>
+                </div>
+                <p class="text-sm d-xl-none d-block mt-2">You can change the sidenav type just on desktop view.</p>
+                <!-- Navbar Fixed -->
+                <div class="d-flex my-3">
+                    <h6 class="mb-0">Navbar Fixed</h6>
+                    <div class="form-check form-switch ps-0 ms-auto my-auto">
+                        <input class="form-check-input mt-1 ms-auto" type="checkbox" id="navbarFixed"
+                            onclick="navbarFixed(this)">
+                    </div>
+                </div>
+                <hr class="horizontal dark my-sm-4">
+                <div class="mt-2 mb-5 d-flex">
+                    <h6 class="mb-0">Light / Dark</h6>
+                    <div class="form-check form-switch ps-0 ms-auto my-auto">
+                        <input class="form-check-input mt-1 ms-auto" type="checkbox" id="dark-version"
+                            onclick="darkMode(this)">
+                    </div>
+                </div>
+                <a class="btn bg-gradient-dark w-100" href="https://www.creative-tim.com/product/argon-dashboard">Free
+                    Download</a>
+                <a class="btn btn-outline-dark w-100"
+                    href="https://www.creative-tim.com/learning-lab/bootstrap/license/argon-dashboard">View
+                    documentation</a>
+                <div class="w-100 text-center">
+                    <a class="github-button" href="https://github.com/creativetimofficial/argon-dashboard"
+                        data-icon="octicon-star" data-size="large" data-show-count="true"
+                        aria-label="Star creativetimofficial/argon-dashboard on GitHub">Star</a>
+                    <h6 class="mt-3">Thank you for sharing!</h6>
+                    <a href="https://twitter.com/intent/tweet?text=Check%20Argon%20Dashboard%20made%20by%20%40CreativeTim%20%23webdesign%20%23dashboard%20%23bootstrap5&amp;url=https%3A%2F%2Fwww.creative-tim.com%2Fproduct%2Fargon-dashboard"
+                        class="btn btn-dark mb-0 me-2" target="_blank">
+                        <i class="fab fa-twitter me-1" aria-hidden="true"></i> Tweet
+                    </a>
+                    <a href="https://www.facebook.com/sharer/sharer.php?u=https://www.creative-tim.com/product/argon-dashboard"
+                        class="btn btn-dark mb-0 me-2" target="_blank">
+                        <i class="fab fa-facebook-square me-1" aria-hidden="true"></i> Share
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--   Core JS Files   -->
+    <script src="static/assets/js/core/popper.min.js"></script>
+    <script src="static/assets/js/core/bootstrap.min.js"></script>
+    <script src="static/assets/js/plugins/perfect-scrollbar.min.js"></script>
+    <script src="static/assets/js/plugins/smooth-scrollbar.min.js"></script>
+
+    <script>
+        // Scrollbar initialization for Windows platform
+        var win = navigator.platform.indexOf('Win') > -1;
+        if (win && document.querySelector('#sidenav-scrollbar')) {
+            var options = {
+                damping: '0.5'
+            }
+            Scrollbar.init(document.querySelector('#sidenav-scrollbar'), options);
+        }
+
+        // Function to download the work report as a PDF
+        function downloadWorkReportAsPDF() {
+            const element = document.getElementById('workreport');
+
+            if (!element) {
+                console.error('Element with id "workreport" not found.');
+                return;
+            }
+
+            html2pdf()
+                .from(element)
+                .save('workreport.pdf')
+                .catch(err => {
+                    console.error('Error generating PDF:', err);
+                });
+        }
+
+        // Filter function to auto-submit form on selection
+        function filterTable() {
+            document.forms[0].submit();  // Submit the form to filter data
+        }
+    </script>
+
+    <!-- Github buttons -->
+    <script async defer src="https://buttons.github.io/buttons.js"></script>
+
+    <!-- Argon Dashboard -->
+    <script src="static/assets/js/argon-dashboard.min.js?v=2.0.4"></script>
+
+    <!-- html2pdf library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.2/html2pdf.bundle.min.js"></script>
+
+    <script>
+        // Object to hold timer data for each task
+        let timers = {};
+
+        function startTimer(element) {
+            const taskId = element.getAttribute('data-task-id');
+
+            // Prevent starting if timer is already running
+            if (timers[taskId]) return;
+
+            // Initialize timer
+            timers[taskId] = {
+                startTime: Date.now(),
+                elapsedTime: 0,
+                interval: setInterval(() => {
+                    timers[taskId].elapsedTime++;
+                    const timerDisplay = document.getElementById(`timer-display-${taskId}`);
+                    timerDisplay.textContent = formatTime(timers[taskId].elapsedTime);
+                }, 1000),
+            };
+
+            // Toggle icons
+            toggleIcons(taskId, 'start');
+        }
+
+        function pauseTimer(element) {
+            const taskId = element.getAttribute('data-task-id');
+
+            // Check if timer is running
+            if (!timers[taskId]) return;
+
+            // Stop the interval
+            clearInterval(timers[taskId].interval);
+
+            // Show timer display
+            const timerDisplay = document.getElementById(`timer-display-${taskId}`);
+            timerDisplay.style.display = 'block';
+
+            // Store elapsed time before removing the timer
+            const elapsedTime = timers[taskId].elapsedTime;
+            saveTimerData(taskId, 'pause', elapsedTime);
+
+            // Cleanup timer
+            delete timers[taskId];
+
+            // Toggle icons
+            toggleIcons(taskId, 'pause');
+        }
+
+        function doneTimer(element) {
+            const taskId = element.getAttribute('data-task-id');
+
+            // Check if timer is running
+            if (!timers[taskId]) return;
+
+            // Stop the interval
+            clearInterval(timers[taskId].interval);
+
+            // Show timer display
+            const timerDisplay = document.getElementById(`timer-display-${taskId}`);
+            timerDisplay.style.display = 'block';
+
+            // Store elapsed time before removing the timer
+            const elapsedTime = timers[taskId].elapsedTime;
+            saveTimerData(taskId, 'done', elapsedTime);
+
+            // Cleanup timer
+            delete timers[taskId];
+
+            // Toggle icons
+            toggleIcons(taskId, 'done');
+        }
+
+        function formatTime(seconds) {
+            const hours = String(Math.floor(seconds / 3600)).padStart(2, '0');
+            const minutes = String(Math.floor((seconds % 3600) / 60)).padStart(2, '0');
+            const secs = String(seconds % 60).padStart(2, '0');
+            return `${hours}:${minutes}:${secs}`;
+        }
+
+        function toggleIcons(taskId, action) {
+            const startIcon = document.querySelector(`i[data-task-id="${taskId}"].fa-play`);
+            const pauseIcon = document.querySelector(`i[data-task-id="${taskId}"].fa-pause`);
+            const doneIcon = document.querySelector(`i[data-task-id="${taskId}"].fa-check`);
+
+            switch (action) {
+                case 'start':
+                    startIcon.style.display = 'none';
+                    pauseIcon.style.display = 'inline';
+                    doneIcon.style.display = 'inline';
+                    break;
+                case 'pause':
+                    startIcon.style.display = 'inline';
+                    pauseIcon.style.display = 'none';
+                    doneIcon.style.display = 'inline';
+                    break;
+                case 'done':
+                    startIcon.style.display = 'inline';
+                    pauseIcon.style.display = 'none';
+                    doneIcon.style.display = 'none';
+                    break;
+            }
+        }
+
+        function saveTimerData(taskId, action, time) {
+            fetch('/save-timer', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ taskId, action, time }),
+            })
+                .then(response => response.json())
+                .then(data => {
+                    console.log('Success:', data);
+                })
+                .catch((error) => {
+                    console.error('Error:', error);
+                });
+        }
+    </script>
+
+
+</body>
+
+
+</html>

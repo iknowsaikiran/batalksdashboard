@@ -1,0 +1,223 @@
+body {
+    margin: 0;
+    padding: 0;
+    font-family: Helvetica, Arial, sans-serif;
+    /* Changed font to Helvetica */
+    background-color: #f8f8f8;
+    /* Changed background to light gray */
+}
+
+.app {
+    max-width: 1024px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+/* Header */
+h3 {
+    text-align: center;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+h4 {
+    margin: 10px 0;
+    color: #555;
+}
+
+/* Create Todo Section */
+.create-todo {
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 20px;
+    margin-bottom: 20px;
+    background-color: #fff;
+    /* Changed background to white */
+}
+
+.create-todo h3 {
+    color: #333;
+}
+
+.create-todo h4 {
+    color: #555;
+}
+
+.create-todo input[type="text"] {
+    width: calc(100% - 20px);
+    /* Adjusted width to account for padding */
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    margin-bottom: 10px;
+}
+
+.create-todo .options {
+    display: flex;
+    flex-direction: column;
+    /* Display options in a column */
+    margin-bottom: 10px;
+}
+
+.create-todo label {
+    cursor: pointer;
+    margin-bottom: 5px;
+}
+
+.create-todo .bubble {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    border: 2px solid #333;
+    margin-right: 5px;
+}
+
+.create-todo input[type="submit"] {
+    width: calc(100% - 20px);
+    /* Adjusted width to account for padding */
+    padding: 10px;
+    background-color: #8e8afb;
+    color: #fff;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+}
+
+/* Todo List Section */
+.todo-list {
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 20px;
+    background-color: #fff;
+}
+
+.todo-list h3 {
+    color: #333;
+}
+
+.todo-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    border-bottom: 1px solid #eee;
+    cursor: pointer;
+}
+
+.todo-item.completed {
+    background-color: #f5f5f5;
+    text-decoration: line-through;
+}
+
+.todo-content {
+    display: flex;
+    align-items: center;
+    width: 60%;
+}
+
+.todo-content input[type="text"].completed {
+    background-color: #f5f5f5;
+}
+
+select {
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    margin-left: 10px;
+}
+
+.todo-actions {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.todo-actions button {
+    padding: 5px 10px;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+}
+
+.save-button,
+.delete-button {
+    background-color: #ddd;
+    color: #333;
+}
+
+.complete-button {
+    background-color: #007bff;
+    color: #fff;
+}
+
+.complete-button:hover {
+    background-color: #0062cc;
+}
+
+.save-button:hover,
+.delete-button:hover {
+    background-color: #ccc;
+}
+
+.create-todo .bubble {
+    height: 15px;
+    width: 15px;
+    background-color: #8e8afb;
+    border-radius: 520%;
+    display: inline-block;
+
+    border: 1px solid #8e8afb;
+
+}
+
+.create-todo {
+    border-radius: 10px;
+    /* Rounded corners */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    /* Box shadow */
+    /* Remaining styles... */
+}
+
+.todo-list {
+    border-radius: 10px;
+    /* Rounded corners */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    /* Box shadow */
+    /* Remaining styles... */
+}
+
+.create-todo {
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    /* Increased border radius for rounded corners */
+    padding: 20px;
+    margin-bottom: 20px;
+    background-color: #fff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    /* Added box shadow */
+}
+
+.create-todo input[type="text"] {
+    width: calc(100% - 20px);
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    /* Increased border radius for rounded corners */
+    margin-bottom: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    /* Added box shadow */
+}
+
+.create-todo input[type="submit"] {
+    width: calc(100% - 20px);
+    padding: 10px;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    /* Increased border radius for rounded corners */ 
+    cursor: pointer;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    /* Added box shadow */
+}
+
+
+/* for font  */

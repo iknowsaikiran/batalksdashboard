@@ -1,0 +1,131 @@
+{% include 'header.html' %}
+<!-- <style> -->
+.col-md-8 {
+margin-left: 260px;
+
+}
+
+.card.mb-4 {
+margin-left: 260px;
+}
+
+.container {
+display: flex;
+justify-content: center;
+align-items: center;
+height: 100vh;
+/* Adjusted height to take the full viewport height */
+width: 80%;
+/* Ensure container takes full width of the viewport */
+padding: 20px;
+/* Added padding for spacing */
+overflow-x: hidden;
+/* Hide horizontal scrollbar */
+}
+
+.card {
+width: 95%;
+/* Adjusted width to make the card wider */
+max-width: 1200px;
+/* Added maximum width to prevent excessive expansion */
+background-color: #fff;
+border-radius: 10px;
+box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+padding: 20px;
+text-align: center;
+overflow: auto;
+/* Allow vertical scrolling if content exceeds card height */
+border: none;
+/* Remove outer black border */
+margin-left: 240px;
+}
+
+
+.card table {
+width: 100%;
+
+white-space: nowrap;
+/* Prevent text wrapping */
+border-collapse: collapse;
+/* Collapse table borders */
+}
+
+.card th,
+.card td {
+padding: 15px;
+/* Increased padding for more spacing */
+border: none;
+/* Remove cell borders */
+}
+
+.card .options-link {
+display: inline-block;
+padding: 8px 16px;
+/* Adjusted padding for the Options link */
+background-color: #007bff;
+color: #fff;
+border-radius: 5px;
+text-decoration: none;
+}
+<!-- </style> -->
+<style>
+  .col-md-8 {
+    margin-left: 260px;
+
+  }
+
+  .card.mb-4 {
+    margin-left: 260px;
+  }
+</style>
+
+<div class="container">
+  <div class="card">
+    <h2>Table Card</h2>
+    <div style="overflow-x: auto;"> <!-- Wrap the table inside a div for horizontal scrolling -->
+      <table>
+        <thead>
+          <tr>
+
+            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Sl.No</th>
+            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Employee id
+            </th>
+            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Email id</th>
+            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Phone No</th>
+
+            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Designation
+            </th>
+            <!--<th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Status</th>-->
+            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Employed On
+            </th>
+            <th class="text-secondary opacity-7 ps-2">Options</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for user in users %}
+          <tr>
+
+            <td class="justify-content-center">{{ user[0] }}</td>
+            <td class="justify-content-center">
+
+              {{ user[1] }}
+
+            </td>
+            <!--<td class="justify-content-center">{{ user[1] }}</td>-->
+            <td class="justify-content-center">{{ user[4] }}</td>
+            <td class="justify-content-center">{{ user[7] }}</td>
+            <td class="justify-content-center">{{ user[9] }}</td>
+            <td class="justify-content-center">{{ user[10] }}</td>
+            <td class="align-right">
+              <a href="javascript:;" class="options-link" data-toggle="tooltip" data-original-title="Edit user">
+                Edit
+              </a>
+            </td>
+
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
