@@ -39,6 +39,8 @@ def generate_empid() -> str:
 
 @app.route('/adduser', methods=['GET', 'POST'])
 def adduser():
+    username = session.get('username')
+    
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
@@ -86,14 +88,16 @@ def adduser():
         finally:
             # Close the cursor
             cursor.close()
-        return redirect(url_for('userprofile'))
+        return redirect(url_for('userprofile'), user_role=user_role)
     
-    return render_template('adduser.html')
+    return render_template('adduser.html', user_role=user_role)
 
 
 # profile display
 @app.route('/userprofile')
 def userprofile():
+    username = session.get('username')
+    
      # Ensure username is a string
     if 'username':
         cur = mysql.connection.cursor()
@@ -175,24 +179,28 @@ def calendar():
 # payroll
 @app.route('/payroll',methods=['GET', 'POST'])
 def payroll():
-     if 'username':
-        cur = mysql.connection.cursor()
-        sql = "SELECT * FROM profile WHERE username=%s"  # Use prepared statement
-        cur.execute(sql, (session['username'],))
-        user = cur.fetchone()
-        cur.close()
-        curs = mysql.connection.cursor()
-        sql1 = "SELECT * FROM payslip WHERE username=%s"  # Use prepared statement
-        curs.execute(sql1, (session['username'],))
-        payslip = curs.fetchone()
-        curs.close()
-        return render_template('payroll.html', user=user, payslip= payslip)
+    username = session.get('username')
+    
+    if 'username':
+       cur = mysql.connection.cursor()
+       sql = "SELECT * FROM profile WHERE username=%s"  # Use prepared statement
+       cur.execute(sql, (session['username'],))
+       user = cur.fetchone()
+       cur.close()
+       curs = mysql.connection.cursor()
+       sql1 = "SELECT * FROM payslip WHERE username=%s"  # Use prepared statement
+       curs.execute(sql1, (session['username'],))
+       payslip = curs.fetchone()
+       curs.close()
+       return render_template('payroll.html', user=user, payslip= payslip)
 
 from datetime import datetime
 
 # payrollmanager
 @app.route('/payrollmanager', methods=['GET', 'POST'])
 def payrollmanager():
+    username = session.get('username')
+   
     cur = mysql.connection.cursor()
     cur.execute("SELECT * FROM profile")
     data = cur.fetchall()
@@ -244,6 +252,7 @@ def payrollmanager():
 @app.route('/empleave', methods=['GET', 'POST'])
 def leavemanagement():
     username = session.get('username')  # Get username from session
+   
 
     # Open the cursor at the start of the function
     cursor = mysql.connection.cursor()
@@ -297,27 +306,11 @@ def leavemanagement():
    
 
 
-# @app.route('/managerleave', methods=['GET', 'POST'])
-# def managerleave():
-#     empid = session.get('empid') #get empid from session
-#     cur = mysql.connection.cursor()
-    
-#     if request.method == 'POST':
-#         status = request.form['status']
-#         username = request.form['username']
-#         cur.execute("UPDATE empleave SET status=%s WHERE username=%s", (status, username))
-#         mysql.connection.commit()  # Commit the changes to the database
-#         cur.close()
-#         return 'Status updated successfully'  # Return a response indicating success
-        
-#     cur.execute("SELECT * FROM empleave")
-#     data = cur.fetchall()
-#     cur.close()
-    
-#     return render_template('managerleave.html', employees=data)
 
 @app.route('/managerleave', methods=['GET', 'POST'])
 def managerleave():
+    username = session.get('username')
+    
     cur = mysql.connection.cursor()
 
     if request.method == 'POST':
@@ -350,6 +343,8 @@ def managerleave():
 # project
 @app.route('/project', methods=['GET', 'POST']) 
 def project():
+    username = session.get('username')
+    
     if request.method == 'POST':
         project_title = request.form['project_title']
         description= request.form['description']
@@ -364,6 +359,8 @@ def project():
 # duplicateproject
 @app.route('/pr0ject')
 def pr0ject():
+    username = session.get('username')
+    
     if 'username':
         cur = mysql.connection.cursor()
         cur.execute("SELECT * FROM project")
@@ -379,6 +376,8 @@ def pr0ject():
 @app.route('/workreport', methods=['GET', 'POST'])
 def workreport():
     empid = session.get('empid')  # Get empid from session
+    username = session.get('username')
+    
     
     # Fetch profile data based on empid
     profile = None
@@ -426,6 +425,8 @@ def workreport():
 #workreport-list
 @app.route('/workreportlist', methods=['GET', 'POST'])
 def workreportlist():
+    username = session.get('username')
+    
     if 'username' in session:  # Check if user is logged in
         empid = session['empid']  # Get empid from session
         
@@ -567,6 +568,8 @@ def workreportlist():
 # tables
 @app.route('/tables')
 def tables():
+    username = session.get('username')
+   
     if 'username' in session:
         cur = mysql.connection.cursor()
         cur.execute("SELECT * FROM profile")
@@ -583,6 +586,8 @@ def tables():
 @app.route('/userworkallocation')
 def userworkallocation():
     username = session.get('username')
+    
+    
     if not username:
         return redirect(url_for('index'))
 
@@ -596,21 +601,23 @@ def userworkallocation():
 #workallocation
 @app.route('/workallocation', methods=['GET', 'POST'])
 def workallocation():
-     cursor = mysql.connection.cursor()
-     cursor.execute("SELECT * FROM project")
-     project_title1=cursor.fetchall()
-     cursor.execute("SELECT * FROM users")
-     username1=cursor.fetchall()
-     if request.method == 'POST':
-        project_title=request.form['project_title']
-        username=request.form['username']
-        work_date = request.form['work_date']
-        work_time = request.form['work_time']
-        work_description = request.form['work_description']
-        cursor.execute('INSERT INTO workallocation VALUES (NULL, %s, %s, %s, %s, %s)', (project_title, username, work_date, work_time, work_description))
-        mysql.connection.commit()
-        return redirect(url_for('workallocation'))
-     return render_template('workallocation1.html', project=project_title1, users=username1 )
+    username = session.get('username')
+    
+    cursor = mysql.connection.cursor()
+    cursor.execute("SELECT * FROM project")
+    project_title1=cursor.fetchall()
+    cursor.execute("SELECT * FROM users")
+    username1=cursor.fetchall()
+    if request.method == 'POST':
+       project_title=request.form['project_title']
+       username=request.form['username']
+       work_date = request.form['work_date']
+       work_time = request.form['work_time']
+       work_description = request.form['work_description']
+       cursor.execute('INSERT INTO workallocation VALUES (NULL, %s, %s, %s, %s, %s)', (project_title, username, work_date, work_time, work_description))
+       mysql.connection.commit()
+       return redirect(url_for('workallocation'))
+    return render_template('workallocation1.html', project=project_title1, users=username1 )
 
 
 @app.route('/migrate_users')
@@ -685,6 +692,7 @@ def login():
     if user:
         session['username'] = username
         session['empid'] = user[1]  # Set empid in session
+        session['user_role'] = user[20]
         return redirect(url_for('dashboard'))
     else:
         flash('Incorrect username or password', 'error')
@@ -740,6 +748,8 @@ def validate_password():
 # dashboard
 @app.route('/dashboard')
 def dashboard():
+    username = session.get('username')
+    
     if 'username' in session:
         cur = mysql.connection.cursor()
         cur.execute("SELECT * FROM profile")
@@ -759,6 +769,8 @@ def logout():
 # to-do
 @app.route('/todo', methods=['GET'])
 def todo():
+    username = session.get('username')
+   
     user_id= session.get('username') 
     category= request.args.get('category')
     username=request.args.get('username')

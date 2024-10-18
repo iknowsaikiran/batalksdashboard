@@ -29,7 +29,8 @@
                 <div class="col-md-6">
                   <div class="form-group">
                     <label for="example-text-input" class="form-control-label">Username</label>
-                    <input class="form-control" type="text" name="username" id="username" oninput="validateUsername(this)" placeholder="Enter Username">
+                    <input class="form-control" type="text" name="username" id="username"
+                      oninput="validateUsername(this)" placeholder="Enter Username">
                   </div>
                 </div>
                 <div class="col-md-6">
@@ -269,13 +270,13 @@
   <script async defer src="https://buttons.github.io/buttons.js"></script>
   <!-- Control Center for Soft Dashboard: parallax effects, scripts for the example pages etc -->
   <script src="static/assets/js/argon-dashboard.min.js?v=2.0.4"></script>
-  
+
   <script>
     function validateUsername(input) {
-        // Allow only alphanumeric characters
-        input.value = input.value.replace(/[^a-zA-Z0-9]/g, '');
+      // Allow only alphanumeric characters
+      input.value = input.value.replace(/[^a-zA-Z0-9]/g, '');
     }
-</script>
+  </script>
 </body>
 
 </html>
