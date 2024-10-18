@@ -40,13 +40,14 @@
 
         .work .form-select {
             max-width: 300px;
+            margin-top: 10px;
         }
     </style>
 
 </head>
 
 <body class="g-sidenav-show   bg-gray-100">
-    <div class="min-height-300 bg-primary position-absolute w-100"></div>
+    <div class="min-height-300 bg-primary position-absolute w-100" style="margin: 0px;"></div>
     <div class="container-fluid py-4">
         <div class="row">
             <div class="col-md-8">
@@ -56,10 +57,9 @@
                         <form method="POST">
                             <div class="work">
                                 <label>Date</label><br />
-                                <input class="form-control" type="date" id="date" name="date" value="" required
-                                    readonly />
+                                <input class="form-control" type="date" id="date" name="date" value="" required readonly/>
                                 <label>Timings</label><br />
-
+                                
                                 <select class="form-select" name="Timings" id="timings">
                                     <option value="" disabled selected>Select Timings</option>
                                     <option value="9am to 10am">9am to 10am</option>
@@ -71,7 +71,7 @@
                                     <option value="3pm to 4pm">3pm to 4pm</option>
                                     <option value="4pm to 4:30pm">4pm to 4:30pm</option>
                                     <option value="4:30pm to 5pm">4:30pm to 5pm</option>
-                                    <option value="5pm to 6pm">5pm to 6pm</option>
+                                    <option value="5pm to 6pm">5pm to 6pm</option>                                    
                                 </select>
                                 <select class="form-select" name="Timings" id="timings-int">
                                     <option value="" disabled selected>Select Timings</option>
@@ -85,22 +85,20 @@
                                     <option value="3pm to 4pm">3pm to 4pm</option>
                                     <option value="4pm to 4:30pm">4pm to 4:30pm</option>
                                     <option value="4:30pm to 5pm">4:30pm to 5pm</option>
-                                    <option value="5pm to 6pm">5pm to 6pm</option>
+                                    <option value="5pm to 6pm">5pm to 6pm</option>                                    
                                 </select>
                                 <label>Select User</label><br />
-                                <select id="usernameFilter" name="usernameFilter" class="form-select"
-                                    onchange="filterTable()" {% if disable_filter %}disabled{% endif %}>
+                                <select id="usernameFilter" name="usernameFilter" class="form-select" onchange="filterTable()" {% if disable_filter %}disabled{% endif %}>
                                     <option value="">Users</option>
                                     {% for username in usernames %}
-                                    <option value="{{ username }}" {% if selected_username==username %}selected{% endif
-                                        %}>
+                                    <option value="{{ username }}" {% if selected_username==username %}selected{% endif %}>
                                         {{ username }}</option>
                                     {% endfor %}
                                 </select>
 
-                                <label>Work Done</label><br />
+                                <label>Work Done</label><br />                                
                                 <textarea class="form-control" name="workdone" rows="5" cols="30"
-                                    placeholder="Work description" style="max-width: 500px;"></textarea>
+                                            placeholder="Work description" style="max-width: 500px;"></textarea>
 
                                 <button type="submit" class="bg-primary p-1 mt-2">Save</button>
                             </div>

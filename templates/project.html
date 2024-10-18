@@ -17,12 +17,19 @@
             width: 220px;
             /* You can adjust this value as needed */
         }
+        .fontsz{
+            font-size: 16px;
+        }
+        .btn{
+            background-color: rgba(81,40,136,255) !important;
+            color:#fff !important;
+        }
     </style>
 
 </head>
 
 <body class="g-sidenav-show   bg-gray-100">
-    <div class="min-height-300 bg-primary position-absolute w-100"></div>
+    <div class="min-height-300 bg-primary position-absolute w-100" style="margin: 0px;"></div>
 
 
     <div class="container-fluid py-4">
@@ -30,12 +37,12 @@
             <div class="col-md-8">
                 <div class="card">
                     <div class="card-body">
-                        <p class="text-uppercase text-sm">Project details</p>
+                        <p class="text-uppercase text-md">Project details</p>
                         <form method="POST">
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label for="example-text-input" class="form-control-label">Project Title</label>
+                                        <label for="example-text-input " class="form-control-label fontsz">Project Title</label>
                                         <input class="form-control" type="text" name="project_title" value="">
                                     </div>
                                 </div>
@@ -51,7 +58,7 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <div class="form-group">
-                                            <label for="example-text-input" class="form-control-label">Start
+                                            <label for="example-text-input" class="form-control-label fontsz">Start
                                                 date</label>
                                             <input class="form-control" type="date" name="start_date" value="">
                                         </div>
@@ -59,13 +66,13 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label for="example-text-input" class="form-control-label">End Date</label>
+                                        <label for="example-text-input" class="form-control-label fontsz">End Date</label>
                                         <input class="form-control" type="date" name="end_date" value="">
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label for="example-text-input" class="form-control-label">Description</label>
+                                        <label for="example-text-input" class="form-control-label fontsz">Description</label>
                                         <textarea class="form-control" name="description" rows="5" cols="30"
                                             placeholder="Project description"></textarea>
                                     </div>
@@ -73,7 +80,7 @@
                                 <hr class="horizontal dark">
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <button class="btn btn-primary btn-sm ms-auto" type="submit">Add
+                                        <button class="btn  btn-sm ms-auto fontsz" type="submit">Add
                                             Project</button>
                                     </div>
                                 </div>

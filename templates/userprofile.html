@@ -483,6 +483,29 @@
                     .then(data => data.is_valid); // Return the validity
             }
         });
+        
+    function enableEdit() {
+        // Get all input fields within the form
+        const inputs = document.querySelectorAll('.form-control');
+        const editButton = document.getElementById('editBtn');
+        const submitButton = document.getElementById('subBtn');
+
+        // Toggle disabled state
+        inputs.forEach(input => {
+            input.disabled = !input.disabled; // Toggle disabled state
+        });
+
+        // Change button visibility
+        if (editButton.style.display === "none") {
+            editButton.style.display = "inline-block";
+            submitButton.style.display = "none";
+        } else {
+            editButton.style.display = "none";
+            submitButton.style.display = "inline-block";
+        }
+    }
+
+
     </script>
 
 </body>
