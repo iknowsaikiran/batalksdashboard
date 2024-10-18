@@ -46,6 +46,9 @@
             display: none;
             /* Initially hidden */
         }
+        .fontsz{
+            font-size: 16px;
+        }
     </style>
 </head>
 
@@ -57,7 +60,7 @@
             <div class="col-12">
                 <div class="card mb-4">
                     <div class="card-header pb-0">
-                        <h6>Leave Request</h6>
+                        <h6 class="fontsz">Leave Request</h6>
                     </div>
                     <div class="card-body px-0 pt-0 pb-2">
                         <div class="table-responsive p-0">
@@ -67,16 +70,16 @@
                                         <tr>
                                             <th></th>
                                             <th
-                                                class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
+                                                class="text-uppercase text-secondary text-sm font-weight-bolder opacity-7 ps-2">
                                                 Leave Type</th>
                                             <th
-                                                class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
+                                                class="text-uppercase text-secondary text-sm font-weight-bolder opacity-7 ps-2">
                                                 Reason</th>
                                             <th
-                                                class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
+                                                class="text-uppercase text-secondary text-sm font-weight-bolder opacity-7 ps-2">
                                                 Start Date</th>
                                             <th
-                                                class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
+                                                class="text-uppercase text-secondary text-sm font-weight-bolder opacity-7 ps-2">
                                                 End Date</th>
                                         </tr>
                                     </thead>
@@ -84,28 +87,28 @@
                                         <tr>
                                             <td></td>
                                             <td class="justify-content-center">
-                                                <select class="form-control" name="leave_type" id="leave_type">
+                                                <select class="form-control fontsz" name="leave_type" id="leave_type">
                                                     <option value="">Select Leave Type</option>
                                                     <option value="sick">Sick Leave</option>
                                                     <option value="casual">Casual Leave</option>
                                                 </select>
                                             </td>
-                                            <td class="justify-content-center">
+                                            <td class="justify-content-center fontsz">
                                                 <textarea class="form-control" name="reason" rows="5" cols="30"
                                                     placeholder="Reason" id="reason" required></textarea>
                                             </td>
-                                            <td class="justify-content-center">
+                                            <td class="justify-content-center fontsz">
                                                 <input class="form-control" type="text" name="start_date"
                                                     id="start_date" placeholder="Select Start Date" readonly required>
                                             </td>
-                                            <td class="justify-content-center">
+                                            <td class="justify-content-center fontsz">
                                                 <input class="form-control" type="text" name="end_date" id="end_date"
                                                     placeholder="Select End Date" readonly required>
                                             </td>
                                         </tr>
                                         <tr>
                                             <td colspan="5">
-                                                <div class="justify-content-center">
+                                                <div class="justify-content-center fontsz">
                                                     <button class="btn btn-primary btn-sm ms-auto" type="submit"
                                                         id="submitBtn" disabled>Request</button>
                                                 </div>
@@ -115,7 +118,7 @@
                                             <td colspan="5">
                                                 <!-- Error Message Display -->
                                                 {% if error_message %}
-                                                <div id="error-message" class="alert alert-danger"
+                                                <div id="error-message" class="alert alert-danger fontsz"
                                                     style="display: block;">
                                                     {{ error_message }}
                                                 </div>
