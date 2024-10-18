@@ -39,15 +39,12 @@
             display: flex;
             flex-direction: column;
         }
-        .nav-link:hover{
+
+        .nav-link:hover {
             background-color: #dad7cd;
-            color:#fff;
-            border-radius:7px
+            color: #fff;
+            border-radius: 7px
         }
-
-        
-        
-
     </style>
 
 </head>
@@ -85,7 +82,7 @@
                         </div>
                         <span class="nav-link-text ms-1">To-do</span>
                     </a>
-                </li> 
+                </li>
                 <li class="nav-item">
                     <a class="nav-link " href="/project">
                         <div
@@ -150,11 +147,6 @@
                         <span class="nav-link-text ms-1">Tables</span>
                     </a>
                 </li>
-                
-
-               
-
-
                 <li class="nav-item">
                     <a class="nav-link " href="/payrollmanager">
                         <div
@@ -191,6 +183,15 @@
                         <span class="nav-link-text ms-1">My Work</span>
                     </a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link " href="/adduser">
+                        <div
+                            class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
+                            <i class="fa-solid fa-folder fa-2xl" style="color: #74C0FC;"></i>
+                        </div>
+                        <span class="nav-link-text ms-1">Add user</span>
+                    </a>
+                </li>
                 <!-- <li class="nav-item">
                     <a class="nav-link " href="/tasks">
                         <div
@@ -209,16 +210,7 @@
                         <span class="nav-link-text ms-1">Tasks List</span>
                     </a>
                 </li> -->
-                <li class="nav-item">
-                    <a class="nav-link " href="/adduser">
-                        <div
-                            class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
-                            <i class="fa-solid fa-folder fa-2xl" style="color: #74C0FC;"></i>
-                        </div>
-                        <span class="nav-link-text ms-1">Add user</span>
-                    </a>
-                </li>
-
+                
             </ul>
         </div>
         <div class="sidenav-footer mx-3 ">
@@ -242,7 +234,8 @@
                                 href="javascript:;">Pages</a></li>
                         <li class="breadcrumb-item text-sm text-white active" aria-current="page">Dashboard</li>
                     </ol> -->
-                    <h5 class="font-weight-bolder text-white mb-0" style="font-size: 40px;">Welcome, {{ session['username']|capitalize }}!</h5>
+                    <h5 class="font-weight-bolder text-white mb-0" style="font-size: 40px;">Welcome, {{
+                        session['username']|capitalize }}!</h5>
                 </nav>
                 <div class="collapse navbar-collapse mt-sm-0 mt-2 me-md-0 me-sm-4" id="navbar">
                     <div class="ms-md-auto pe-md-3 d-flex align-items-center">
@@ -284,7 +277,7 @@
                                     </div>
                                     <h6 class="nav-link-text ms-1 navprofile" style="color:#fff">Profile</h6>
                                 </a>
-                            </div> 
+                            </div>
                             <div class="logout">
                                 <a href="/logout"><img src="static\assets\img\logout2.png" alt="Logout"></a>
                                 <h6 style="color: #fff;">Logout</h6>
@@ -499,18 +492,18 @@
             Scrollbar.init(document.querySelector('#sidenav-scrollbar'), options);
         }
         // Select all navigation links
-const navLinks = document.querySelectorAll('.nav-link');
+        const navLinks = document.querySelectorAll('.nav-link');
 
-// Loop through the links and add a click event listener
-navLinks.forEach(link => {
-    link.addEventListener('click', function() {
-        // Remove the active class from all links
-        navLinks.forEach(nav => nav.classList.remove('active'));
-        
-        // Add the active class to the clicked link
-        this.classList.add('active');
-    });
-});
+        // Loop through the links and add a click event listener
+        navLinks.forEach(link => {
+            link.addEventListener('click', function () {
+                // Remove the active class from all links
+                navLinks.forEach(nav => nav.classList.remove('active'));
+
+                // Add the active class to the clicked link
+                this.classList.add('active');
+            });
+        });
 
     </script>
     <!-- Github buttons -->
