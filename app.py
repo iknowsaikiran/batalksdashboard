@@ -240,43 +240,111 @@ def payrollmanager():
     return render_template('payrollmanager.html', users=data, user=user)
 
 
-#employeeleavemanaement
-@app.route('/empleave',methods=['GET', 'POST'])
+#employeeleavemanaement--for emp
+@app.route('/empleave', methods=['GET', 'POST'])
 def leavemanagement():
+    username = session.get('username')  # Get username from session
+
+    # Open the cursor at the start of the function
     cursor = mysql.connection.cursor()
-    cursor.execute('SELECT * FROM empleave')
+
+    # Fetch leave requests for the logged-in user based on username
+    cursor.execute('SELECT * FROM empleave WHERE username = %s', (username,))
     data = cursor.fetchall()
+
     if request.method == 'POST':
         leave_type = request.form['leave_type']
-        start_date= request.form['start_date']
-        end_date= request.form['end_date']
+        start_date = request.form['start_date']
+        end_date = request.form['end_date']
         reason = request.form['reason']
-        cursor.execute('INSERT INTO empleave VALUES (NULL, %s, %s, %s, %s, %s, %s)', (session['username'],leave_type, start_date, end_date, reason,'Pending'))
-        mysql.connection.commit()
-        return render_template('leaverequest.html')
-    return render_template('leaverequest.html',leaves=data)
+        
+        # Initialize an empty error message
+        error_message = None
 
+        # Server-side validation
+        if not leave_type or not start_date or not end_date or not reason:
+            error_message = "All fields are required. Please fill in all the details."
+        elif start_date > end_date:  # Check if start date is before end date
+            error_message = "Start date must be before end date."
 
+        if error_message is None:
+            try:
+                # Convert date formats from DD/MM/YYYY to YYYY-MM-DD
+                start_date = datetime.strptime(start_date, '%d/%m/%Y').strftime('%Y-%m-%d')
+                end_date = datetime.strptime(end_date, '%d/%m/%Y').strftime('%Y-%m-%d')
+
+                # Insert into the database
+                cursor.execute('INSERT INTO empleave (username, leave_type, start_date, end_date, reason, status) VALUES (%s, %s, %s, %s, %s, %s)', 
+                               (username, leave_type, start_date, end_date, reason, 'Pending'))
+                mysql.connection.commit()
+
+                # After successful insertion, fetch the updated leave requests
+                cursor.execute('SELECT * FROM empleave WHERE username = %s', (username,))
+                data = cursor.fetchall()
+
+                return render_template('leaverequest.html', leaves=data)  # Redirect to updated data view
+            except ValueError:
+                error_message = "There was an error processing the date. Please check your input."
+
+        # If validation fails, return the error message to the template
+        return render_template('leaverequest.html', leaves=data, error_message=error_message)
+
+    # Close the cursor after all operations
+    cursor.close()
+    
+    return render_template('leaverequest.html', leaves=data)
    
 
+
+# @app.route('/managerleave', methods=['GET', 'POST'])
+# def managerleave():
+#     empid = session.get('empid') #get empid from session
+#     cur = mysql.connection.cursor()
+    
+#     if request.method == 'POST':
+#         status = request.form['status']
+#         username = request.form['username']
+#         cur.execute("UPDATE empleave SET status=%s WHERE username=%s", (status, username))
+#         mysql.connection.commit()  # Commit the changes to the database
+#         cur.close()
+#         return 'Status updated successfully'  # Return a response indicating success
+        
+#     cur.execute("SELECT * FROM empleave")
+#     data = cur.fetchall()
+#     cur.close()
+    
+#     return render_template('managerleave.html', employees=data)
 
 @app.route('/managerleave', methods=['GET', 'POST'])
 def managerleave():
     cur = mysql.connection.cursor()
-    
+
     if request.method == 'POST':
-        status = request.form['status']
-        username = request.form['username']
-        cur.execute("UPDATE empleave SET status=%s WHERE username=%s", (status, username))
-        mysql.connection.commit()  # Commit the changes to the database
+        data = request.get_json()
+        username = data['username']
+        leave_type = data['leave_type']
+        start_date = data['start_date']
+        status = data['status']
+
+        # Updating the leave status for the selected username, leave_type, and start_date
+        cur.execute("""
+            UPDATE empleave 
+            SET status = %s 
+            WHERE username = %s AND leave_type = %s AND start_date = %s
+        """, (status, username, leave_type, start_date))
+
+        mysql.connection.commit()
         cur.close()
-        return 'Status updated successfully'  # Return a response indicating success
-        
+
+        return jsonify({'message': f'Status updated to {status} successfully'})
+
+    # Fetch and display the leave requests
     cur.execute("SELECT * FROM empleave")
     data = cur.fetchall()
     cur.close()
     
     return render_template('managerleave.html', employees=data)
+
 
 # project
 @app.route('/project', methods=['GET', 'POST']) 
@@ -306,45 +374,6 @@ def pr0ject():
         return redirect(url_for('index'))
 
 
-# @app.route('/workreport', methods=['GET', 'POST'])
-# def workreport():
-#     empid = session.get('empid')  # Get empid from session
-
-#     # Fetch profile data based on empid
-#     profile = None
-#     usernames = []  # Store usernames
-#     if empid:
-#         cursor = mysql.connection.cursor()
-
-#         # Fetch the profile for the current user
-#         cursor.execute("SELECT * FROM profile WHERE empid = %s", (empid,))
-#         profile = cursor.fetchone()
-
-#         # Fetch all usernames from the profile table
-#         cursor.execute("SELECT username FROM profile")
-#         usernames = [row[0] for row in cursor.fetchall()]  # Get usernames
-
-#         cursor.close()
-
-#     if request.method == 'POST':
-#         date = request.form['date']
-#         time = request.form['Timings']
-#         work_done = request.form['workdone']
-
-#         # Use empid fetched from profile
-#         if profile:
-#             empid = profile[1]  # Assuming empid is in the second column
-
-#             cursor = mysql.connection.cursor()
-#             cursor.execute(
-#                 'INSERT INTO workreport (empid, date, time, work_done) VALUES (%s, %s, %s, %s)',
-#                 (empid, date, time, work_done)
-#             )
-#             mysql.connection.commit()
-#             cursor.close()
-#             return redirect(url_for('workreportlist'))  # Redirect to work report list
-
-#     return render_template('workreport.html', profile=profile, usernames=usernames)  # Pass usernames to template
 
 @app.route('/workreport', methods=['GET', 'POST'])
 def workreport():
@@ -456,11 +485,16 @@ def workreportlist():
         # Check if there's no data found
         no_data = not data  # True if no data, False otherwise
         
+        # Initialize timer_status, pause_reason, and check_reason
+        timer_status, pause_reason, check_reason = None, None, None
+        
         # Handle timer updates (assuming the data comes in as JSON)
         if request.method == 'POST' and request.is_json:
-            timer_data = request.get_json()
-            action = timer_data.get('action')
-            work_done = timer_data.get('work_done')
+            data = request.get_json()
+            action = data.get('action')
+            work_done = data.get('work_done')
+            pause_reason = data.get('pause_reason')
+            check_reason = data.get('check_reason')
 
             cursor = mysql.connection.cursor()
 
@@ -490,35 +524,41 @@ def workreportlist():
                 """, (empid, work_done, selected_date))
                 timer_status= 'running'
             elif action == 'pause':
-                # Update the work report's timer status to 'paused'
+            # Update the work report's timer status to 'paused' and record the pause reason
                 cursor.execute("""
                     UPDATE workreport 
-                    SET timer_status = 'paused'
+                    SET timer_status = 'paused', pause_reason = %s
                     WHERE empid = %s AND work_done = %s AND date = %s
-                """, (empid, work_done, selected_date))
-                timer_status= 'paused'
+                """, (pause_reason, empid, work_done, selected_date))
+                timer_status = 'paused'
             elif action == 'check':
-                # Update the work report's timer status to 'done'
+            # Update the work report's timer status to 'done' and record the check reason
                 cursor.execute("""
                     UPDATE workreport 
-                    SET timer_status = 'done'
+                    SET timer_status = 'done', check_reason = %s
                     WHERE empid = %s AND work_done = %s AND date = %s
-                """, (empid, work_done, selected_date))
-                timer_status= 'done'
+                """, (check_reason, empid, work_done, selected_date))
+                timer_status = 'done'
 
             mysql.connection.commit()
             cursor.close()
         
-        cursor = mysql.connection.cursor()
-        # Fetch the timer_status data from the workreport
-        cursor.execute("SELECT timer_status FROM workreport WHERE empid = %s", (empid,))
-        timer_status = cursor.fetchone()[0]  # Assuming 'time' is the first column in the fetched result
-        cursor.close()
+            cursor = mysql.connection.cursor()
+            # Fetch the timer_status data from the workreport
+            cursor.execute("SELECT timer_status, pause_reason, check_reason FROM workreport WHERE empid = %s AND date = %s AND work_done = %s", (empid,selected_date,work_done))
+            work_report_data = cursor.fetchone()
+            cursor.close()
         
-        # Render the workreportlist template with the filtered data
+            if work_report_data:
+                timer_status, pause_reason, check_reason = work_report_data
+            else:
+                timer_status, pause_reason, check_reason = None, None, None
+        
+            # Render the workreportlist template with the filtered data
         return render_template('workreportlist.html', project=data, usernames=usernames, 
                                disable_filter=disable_filter, selected_username=selected_username,
-                               selected_date=selected_date, no_data=no_data, timer_status=timer_status)
+                               selected_date=selected_date, no_data=no_data, timer_status=timer_status,
+                               pause_reason=pause_reason,check_reason=check_reason)
     else:
         return redirect(url_for('index'))
 

@@ -108,6 +108,38 @@
             color: green;
             margin-left: 10px;
         }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            width: 400px;
+            text-align: center;
+        }
+
+        #pauseModal {
+            margin: 5px;
+
+        }
+
+        .modal input {
+            width: 90%;
+            padding: 5px;
+            margin-top: 10px;
+        }
     </style>
     <style>
         .marquee {
@@ -129,9 +161,6 @@
                 transform: translateX(-100%);
             }
         }
-        .btn{
-            color:#fff;
-        }
     </style>
 </head>
 
@@ -144,10 +173,10 @@
             <div class="col-12">
                 <div class="card mb-4">
                     <div class="marquee">
-                        Welcome to the Work Report List Page!
+                        Welcome to the Work List Page!
                     </div>
                     <div class="card-header pb-0">
-                        <h6>WorkReport List of {{ session['username']|capitalize }} and Emp.Id is {{session['empid']}}
+                        <h6>Work List of {{ session['username']|capitalize }} and Emp.Id is {{session['empid']}}
                         </h6>
                         <a href="/workreport" class="bg-primary p-2 ">Work-Report</a>
                     </div>
@@ -213,19 +242,23 @@
                                         <td class="justify-content-center">{{ pro[3] }}</td>
                                         <td class="justify-content-center workdone-column"
                                             style="word-wrap:break-word;overflow-wrap:break-word;white-space: normal;">
-                                            {{ pro[4] }}</td>
+                                            <span id="workdone-{{ pro[4] }}">{{ pro[4] }}</span>
+                                            <span id="pause-reason-{{ pro[4] }}" style="display:block; color:grey;">
+                                                <em class="pause-reason" data-status="paused"
+                                                    data-reason="{{ pro[7] }}">
+                                                    Reason for pausing: {{ pro[7] }}
+                                                </em>
+                                            </span>
+                                            <!-- Placeholder for Pause Reason -->
+                                            <span id="check-reason-{{ pro[4] }}" style="display:block; color:grey;">
+                                                <em class="check-reason" data-status="done" data-reason="{{ pro[8] }}">
+                                                    Reason for checking: {{ pro[8] }}
+                                                </em>
+                                            </span>
+                                            <!-- Placeholder for Check Reason -->
+                                        </td>
                                         <td class="justify-content-center">{{ pro[5] }}</td>
                                         <td>
-                                            <!-- <span class="timer-icons">
-                                                <i class="fa-solid fa-play play-button"
-                                                    onclick="handlePlayButtonClick('{{ pro[4] }}', this);"></i>
-                                                <i class="fa-solid fa-pause pause-button"
-                                                    onclick="pauseTimer('{{ pro[4] }}', this);"
-                                                    style="display: none;"></i>
-                                                <i class="fa-solid fa-check check-button"
-                                                    onclick="checkWork('{{ pro[4] }}', this);"
-                                                    style="display: none;"></i>
-                                            </span> -->
                                             <span class="timer-icons">
                                                 {% if pro[6] == 'yet to start' %}
                                                 <i class="fa-solid fa-play play-button"
@@ -234,7 +267,7 @@
                                                     onclick="pauseTimer('{{ pro[4] }}', this);"
                                                     style="display: none;"></i>
                                                 <i class="fa-solid fa-check check-button"
-                                                    onclick="checkWork('{{ pro[4] }}', this);"
+                                                    onclick="checkWorkButton('{{ pro[4] }}', this);"
                                                     style="display: none;"></i>
                                                 {% elif pro[6] == 'running' %}
                                                 <i class="fa-solid fa-play play-button"
@@ -243,7 +276,7 @@
                                                 <i class="fa-solid fa-pause pause-button"
                                                     onclick="pauseTimer('{{ pro[4] }}', this);"></i>
                                                 <i class="fa-solid fa-check check-button"
-                                                    onclick="checkWork('{{ pro[4] }}', this);"></i>
+                                                    onclick="checkWorkButton('{{ pro[4] }}', this);"></i>
                                                 {% elif pro[6] == 'paused' %}
                                                 <i class="fa-solid fa-play play-button"
                                                     onclick="handlePlayButtonClick('{{ pro[4] }}', this);"></i>
@@ -251,7 +284,7 @@
                                                     onclick="pauseTimer('{{ pro[4] }}', this);"
                                                     style="display: none;"></i>
                                                 <i class="fa-solid fa-check check-button"
-                                                    onclick="checkWork('{{ pro[4] }}', this);"></i>
+                                                    onclick="checkWorkButton('{{ pro[4] }}', this);"></i>
                                                 {% elif pro[6] == 'done' %}
                                                 <i class="fa-solid fa-play play-button"
                                                     onclick="handlePlayButtonClick('{{ pro[4] }}', this);"
@@ -260,7 +293,7 @@
                                                     onclick="pauseTimer('{{ pro[4] }}', this);"
                                                     style="display: none;"></i>
                                                 <i class="fa-solid fa-check check-button"
-                                                    onclick="checkWork('{{ pro[4] }}', this);"></i>
+                                                    onclick="checkWorkButton('{{ pro[4] }}', this);"></i>
                                                 {% endif %}
                                             </span>
                                         </td>
@@ -273,23 +306,42 @@
                             <!-- Modal Structure for Pause Action -->
                             <div id="pauseModal" class="modal">
                                 <div class="modal-content">
-                                    <h4>Pause Work</h4>
-                                    <p>Please provide a reason for pausing:</p>
-                                    <input type="text" id="pauseReason" placeholder="Enter pause reason">
+                                    <h4>Pause Work?</h4>
+                                    <label class="form-label" for="checkReason">Please provide a reason for
+                                        pausing</label>
+                                    <input style="margin: 5px;" class="form-control" type="text" id="pauseReason"
+                                        placeholder="Enter pause reason">
+                                    <div style="padding: 5px;">
+                                        <button id="cbtn" class="btn btn-secondary"
+                                            onclick="closeModal()">Cancel</button>
+                                        <button id="cbtn" class="btn btn-primary"
+                                            onclick="confirmPause()">Confirm</button>
+                                    </div>
                                 </div>
-                                <div class="modal-footer">
-                                    <button class="btn btn-secondary" onclick="closeModal()">Cancel</button>
-                                    <button class="btn btn-primary" onclick="confirmPause()">Confirm</button>
+                            </div>
+                            <!-- Modal Structure for Check Action -->
+                            <div id="checkModal" class="modal">
+                                <div class="modal-content">
+                                    <h4>Confirm Check Work</h4>
+                                    <label class="form-label" for="checkReason">Reason for checking:</label>
+                                    <input class="form-control" type="text" id="checkReason" placeholder="Enter reason">
+                                    <div style="padding: 5px; margin:5px">
+                                        <button id="cbtn" class="btn btn-secondary"
+                                            onclick="closeCheckModal()">Cancel</button>
+                                        <button id="cbtn" class="btn btn-primary"
+                                            onclick="confirmCheck()">Confirm</button>
+                                    </div>
                                 </div>
+
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="download-button text-center no-print d-flex justify-content-center">
-            <button onclick="downloadWorkReportAsPDF() " class="btn" style="background-color:rgba(236,97,35,255);">Download Work-Report as PDF</button>
-        </div>
+        <!-- <div class="download-button text-center no-print">
+            <button onclick="downloadWorkReportAsPDF() " class="btn btn-info">Download Work-Report as PDF</button>
+        </div> -->
     </div>
     </main>
     <!--   Core JS Files   -->
@@ -337,9 +389,13 @@
 
     <script>
         let activePlayButton = null; // Variable to track the currently active play button
+        let currentPauseButton = null; // To track which pause button was clicked
+        let currentWorkDone = null; // To track which work is being paused
+        let currentCheckButton = null; // To track which check button was clicked
+        let currentWorkDoneForCheck = null; // To track which work is being checked
 
         // Function to update the marquee content and toggle buttons
-        function updateMarquee(workDone, playButton, id) {
+        function updateMarquee(workDone, playButton) {
             const marquee = document.querySelector('.marquee');
             marquee.textContent = `Current Work Done: ${workDone}`;
 
@@ -356,12 +412,13 @@
             activePlayButton = playButton; // Set the currently active play button
             // Send play action to the back-end
             sendTimerData('play', workDone);
+
             // Update the status in the corresponding table cell
             const statusCell = document.getElementById(`status-${workDone}`);
             if (statusCell) {
                 statusCell.textContent = 'running'; // Change text content
             }
-
+            // populateTimers();
         }
 
         // Function to handle the play button click
@@ -373,7 +430,7 @@
                 if (!confirmSwitch) {
                     return; // Exit if the user does not confirm
                 }
-                // If confirmed, stop the current timer (optional: you can add logic here to stop the current timer if needed)
+                // If confirmed, stop the current timer
                 const timerIcons = activePlayButton.parentElement;
                 const pauseButton = timerIcons.querySelector('.pause-button');
                 const checkButton = timerIcons.querySelector('.check-button');
@@ -387,55 +444,157 @@
             updateMarquee(workDone, playButton);
         }
 
-        // Function to pause the timer
+        // Show modal when pause button is clicked
         function pauseTimer(workDone, pauseButton) {
-            const marquee = document.querySelector('.marquee');
-            marquee.textContent = `Work Done Paused: ${workDone}`;
+            console.log("Pause button clicked for work:", workDone, pauseButton); // Debugging log
 
-            const timerIcons = pauseButton.parentElement;
+            // Set the current pause button and work done identifier
+            currentPauseButton = pauseButton;
+            currentWorkDone = workDone;
+
+            // Show the pause modal
+            document.getElementById('pauseModal').style.display = 'flex'; // Show modal
+            console.log("Modal opened, currentPauseButton set to:", currentPauseButton);
+            // populateTimers();
+        }
+
+        // Close the pause modal
+        function closeModal() {
+            document.getElementById('pauseModal').style.display = 'none'; // Hide modal
+            // Don't reset currentPauseButton or currentWorkDone here
+        }
+
+        // Confirm pause action
+        function confirmPause() {
+            const pauseReason = document.getElementById('pauseReason').value;
+            if (!pauseReason) {
+                alert("Please provide a reason for pausing.");
+                return; // Exit if no reason is provided
+            }
+
+            console.log("Confirming pause, currentPauseButton:", currentPauseButton);
+
+            // Ensure that currentPauseButton is not null
+            if (!currentPauseButton) {
+                console.error("Pause button not set");
+                return;
+            }
+
+            // Hide the modal after confirmation
+            closeModal();
+
+            // Proceed with pause action
+            const marquee = document.querySelector('.marquee');
+            marquee.textContent = `Work Done Paused: ${currentWorkDone}`;
+
+            const timerIcons = currentPauseButton.parentElement;
             const playButton = timerIcons.querySelector('.play-button');
             const checkButton = timerIcons.querySelector('.check-button');
 
-            playButton.style.display = 'inline'; // Show the play button
-            pauseButton.style.display = 'none'; // Hide the pause button
-            checkButton.style.display = 'inline'; // Show the check button
+            if (playButton) playButton.style.display = 'inline'; // Show the play button
+            if (currentPauseButton) currentPauseButton.style.display = 'none'; // Hide the pause button
+            if (checkButton) checkButton.style.display = 'inline'; // Show the check button
 
             console.log("Timer paused");
 
-            // Send pause action to the back-end
-            sendTimerData('pause', workDone);
-            const statusCell = document.getElementById(`status-${workDone}`);
-            statusCell.textContent = 'paused'; // Change text content
+            // Update the pause reason in the table
+            const pauseReasonSpan = document.getElementById(`pause-reason-${currentWorkDone}`);
+            if (pauseReasonSpan) {
+                pauseReasonSpan.style.display = 'block'; // Show the pause reason
+                pauseReasonSpan.querySelector('em').textContent = `Reason for pausing: ${pauseReason}`; // Set the pause reason text
+            }
+
+            // Send pause action to the back-end with the reason
+            sendTimerData('pause', currentWorkDone, pauseReason, '');
+
+            // Update status in the table
+            const statusCell = document.getElementById(`status-${currentWorkDone}`);
+            if (statusCell) {
+                statusCell.textContent = 'paused'; // Change text content
+            }
+            // populateTimers();
         }
 
-        // Function to check work done
-        function checkWork(workDone, checkButton) {
-            const marquee = document.querySelector('.marquee');
-            marquee.textContent = `Work Done Completed: ${workDone}`;
+        // Show modal when check button is clicked
+        function checkWorkButton(workDone, checkButton) {
+            console.log("Check button clicked for work:", workDone); // Debugging log
 
-            const timerIcons = checkButton.parentElement;
+            // Set the current check button and work done identifier
+            currentCheckButton = checkButton;
+            currentWorkDoneForCheck = workDone;
+
+            // Show the check modal
+            document.getElementById('checkModal').style.display = 'flex'; // Show modal
+            console.log("Modal opened for checking work:", currentWorkDoneForCheck);
+            // populateTimers();
+        }
+
+        // Close the check modal
+        function closeCheckModal() {
+            document.getElementById('checkModal').style.display = 'none'; // Hide modal
+            // Don't reset currentCheckButton or currentWorkDoneForCheck here
+        }
+
+        // Confirm check action
+        function confirmCheck() {
+            const checkReason = document.getElementById('checkReason').value;
+            if (!checkReason) {
+                alert("Please provide a reason for checking.");
+                return; // Exit if no reason is provided
+            }
+
+            console.log("Confirming check, currentCheckButton:", currentCheckButton);
+
+            // Ensure that currentCheckButton is not null
+            if (!currentCheckButton) {
+                console.error("Check button not set");
+                return;
+            }
+
+            // Hide the modal after confirmation
+            closeCheckModal();
+
+            // Proceed with check action
+            const marquee = document.querySelector('.marquee');
+            marquee.textContent = `Work Done Checked: ${currentWorkDoneForCheck}`;
+
+            const timerIcons = currentCheckButton.parentElement;
             const playButton = timerIcons.querySelector('.play-button');
             const pauseButton = timerIcons.querySelector('.pause-button');
 
-            playButton.style.display = 'none'; // Hide the play button
-            pauseButton.style.display = 'none'; // Hide the pause button
-            checkButton.style.display = 'inline'; // Show the check button
+            // Show the play button and hide others
+            if (playButton) playButton.style.display = 'none'; // Show the play button
+            if (pauseButton) pauseButton.style.display = 'none'; // Hide the pause button
+            if (currentCheckButton) currentCheckButton.style.display = 'none'; // Hide the check button
 
             console.log("Work checked");
 
-            // Send check action to the back-end
-            sendTimerData('check', workDone);
-            activePlayButton = null; //After completion, initiate to null
-            const statusCell = document.getElementById(`status-${workDone}`);
-            statusCell.textContent = 'done'; // Change text content
+            // Update the check reason in the table (if applicable)
+            const checkReasonSpan = document.getElementById(`check-reason-${currentWorkDoneForCheck}`);
+            if (checkReasonSpan) {
+                checkReasonSpan.style.display = 'block'; // Show the check reason
+                checkReasonSpan.querySelector('em').textContent = `Reason for checking: ${checkReason}`; // Set the check reason text
+            }
+
+            // Send check action to the back-end with the reason
+            sendTimerData('check', currentWorkDoneForCheck, '', checkReason);
+
+            // Update status in the table
+            const statusCell = document.getElementById(`status-${currentWorkDoneForCheck}`);
+            if (statusCell) {
+                statusCell.textContent = 'done'; // Change text content
+            }
+            // populateTimers();
         }
 
 
         // Function to send timer data to the back-end
-        function sendTimerData(action, workDone) {
+        function sendTimerData(action, workDone, pauseReason = '', checkReason = '') {
             const data = {
                 action: action,
-                work_done: workDone
+                work_done: workDone,
+                pause_reason: pauseReason, // Include pause reason in the data
+                check_reason: checkReason // Include check reason in the data
             };
 
             fetch('/workreportlist', { // Replace with your actual back-end endpoint
@@ -461,8 +620,42 @@
                 });
         }
     </script>
+    <!-- <script>
+        // Function to update the display of em tags based on timer_status
+        function populateTimers() {
+            // Get all rows in the work report body
+            const rows = document.querySelectorAll('#workreportBody tr');
 
+            rows.forEach(row => {
+                // Get the timer status for the current row
+                const timerStatusCell = row.querySelector('[id^="status-"]');
+                const timerStatus = timerStatusCell.textContent.trim();
 
+                // Get pause and check reason elements
+                const pauseReasonEm = row.querySelector('.pause-reason');
+                const checkReasonEm = row.querySelector('.check-reason');
+
+                // Set display style based on timer status
+                if (timerStatus === 'paused') {
+                    pauseReasonEm.style.display = 'block';
+                } else {
+                    pauseReasonEm.style.display = 'none';
+                }
+
+                if (timerStatus === 'done') {
+                    checkReasonEm.style.display = 'block';
+                } else {
+                    checkReasonEm.style.display = 'none';
+                }
+
+                
+            });
+        }
+
+        
+    </script>
+
+ -->
 
 </body>
 
