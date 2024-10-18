@@ -282,7 +282,8 @@ def leavemanagement():
                 cursor.execute('SELECT * FROM empleave WHERE username = %s', (username,))
                 data = cursor.fetchall()
 
-                return render_template('leaverequest.html', leaves=data)  # Redirect to updated data view
+                #return render_template('leaverequest.html', leaves=data)  # Redirect to updated data view
+                return redirect(url_for('leavemanagement'))
             except ValueError:
                 error_message = "There was an error processing the date. Please check your input."
 

@@ -101,6 +101,10 @@
                                             class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
                                             Reason
                                         </th>
+                                        <th
+                                            class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
+                                            days
+                                        </th>
                                         <th class="text-secondary opacity-7 ps-2">Options</th>
                                     </tr>
                                 </thead>
@@ -122,6 +126,7 @@
                                             style="word-wrap:break-word; overflow-wrap:break-word; white-space: normal;">
                                             {{ employee[5] }}
                                         </td>
+                                        <td id="daysDifference"></td> <!-- Difference will be displayed here -->
                                         <td class="leave-status" data-status="{{ employee[6] }}">
                                             {% if employee[6] == 'Pending' %}
                                             <!-- Show buttons if leave status is still Pending -->
@@ -310,7 +315,48 @@
                 });
         }
     </script>
+    
+    <script>
+        function calculateDaysDifference(startDate, endDate) {
+            // Create Date objects
+            const start = new Date(startDate);
+            const end = new Date(endDate);
 
+            // Calculate the difference in milliseconds
+            const differenceInMilliseconds = end - start;
+
+            // Convert milliseconds to days
+            const millisecondsInADay = 1000 * 60 * 60 * 24; // 1000 ms/sec * 60 sec/min * 60 min/hr * 24 hr/day
+            const differenceInDays = Math.round(differenceInMilliseconds / millisecondsInADay);
+
+            return differenceInDays;
+        }
+
+        function showDaysDifference() {
+            // Get all rows in the tbody
+            const rows = document.querySelectorAll('tbody tr');
+
+            // Iterate through each row
+            rows.forEach(row => {
+                const startDateCell = row.querySelector('td:nth-child(5)'); // Start Date column
+                const endDateCell = row.querySelector('td:nth-child(6)');   // End Date column
+                const daysDifferenceCell = row.querySelector('td:nth-child(8)'); // Days Difference column
+
+                if (startDateCell && endDateCell && daysDifferenceCell) {
+                    const start = startDateCell.innerText.trim(); // Retrieve and trim the start date
+                    const end = endDateCell.innerText.trim();     // Retrieve and trim the end date
+
+                    const daysDifference = calculateDaysDifference(start, end);
+
+                    // Display the result in the days difference cell
+                    daysDifferenceCell.innerText = daysDifference + 1 +" days";
+                }
+            });
+        }
+
+        // Call the function when the page loads
+        window.onload = showDaysDifference;
+    </script>
 
 </body>
 
