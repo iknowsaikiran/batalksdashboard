@@ -40,7 +40,7 @@ def generate_empid() -> str:
 @app.route('/adduser', methods=['GET', 'POST'])
 def adduser():
     username = session.get('username')
-    
+    user_role = session.get('user_role')
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
