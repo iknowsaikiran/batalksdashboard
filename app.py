@@ -40,7 +40,7 @@ def generate_empid() -> str:
 @app.route('/adduser', methods=['GET', 'POST'])
 def adduser():
     username = session.get('username')
-    user_role=session.get("user_role")
+    
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
@@ -200,6 +200,16 @@ from datetime import datetime
 @app.route('/payrollmanager', methods=['GET', 'POST'])
 def payrollmanager():
     username = session.get('username')
+    empid = session.get('empid')
+    user_role = session.get('user_role')
+
+    if not username or user_role in ['Employee', 'Trainee']:
+        return '''
+            <script type="text/javascript">
+                alert("Access denied. You do not have permission to view this page.");
+                window.location.href = "/dashboard";  // Redirect to the desired page after alert
+            </script>
+        '''
    
     cur = mysql.connection.cursor()
     cur.execute("SELECT * FROM profile")
@@ -245,7 +255,7 @@ def payrollmanager():
 
         return redirect(url_for('payrollmanager'))
 
-    return render_template('payrollmanager.html', users=data, user=user)
+    return render_template('payrollmanager.html', users=data, user=user,user_role=user_role)
 
 
 #employeeleavemanaement--for emp
@@ -310,6 +320,15 @@ def leavemanagement():
 @app.route('/managerleave', methods=['GET', 'POST'])
 def managerleave():
     username = session.get('username')
+    user_role = session.get('user_role')
+
+    if not username or user_role in ['Employee', 'Trainee']:
+        return '''
+            <script type="text/javascript">
+                alert("Access denied. You do not have permission to view this page.");
+                window.location.href = "/dashboard";  // Redirect to the desired page after alert
+            </script>
+        '''
     
     cur = mysql.connection.cursor()
 
@@ -337,14 +356,22 @@ def managerleave():
     data = cur.fetchall()
     cur.close()
     
-    return render_template('managerleave.html', employees=data)
+    return render_template('managerleave.html', employees=data,user_role=user_role)
 
 
 # project
 @app.route('/project', methods=['GET', 'POST']) 
 def project():
     username = session.get('username')
-    
+    user_role = session.get('user_role')
+
+    if not username or user_role in ['Employee', 'Trainee']:
+        return '''
+            <script type="text/javascript">
+                alert("Access denied. You do not have permission to view this page.");
+                window.location.href = "/dashboard";  // Redirect to the desired page after alert
+            </script>
+        '''
     if request.method == 'POST':
         project_title = request.form['project_title']
         description= request.form['description']
@@ -353,21 +380,29 @@ def project():
         cursor = mysql.connection.cursor()
         cursor.execute('INSERT INTO project VALUES (NULL, %s, %s, %s, %s)', (project_title, description, start_date, end_date))
         mysql.connection.commit()
-        return render_template('project.html')
-    return render_template('project.html')
+        return render_template('project.html',user_role=user_role)
+    return render_template('project.html',user_role=user_role)
 
 # duplicateproject
 @app.route('/pr0ject')
 def pr0ject():
     username = session.get('username')
-    
+    user_role = session.get('user_role')
+
+    # if not username or user_role in ['Employee', 'Trainee']:
+    #     return '''
+    #         <script type="text/javascript">
+    #             alert("Access denied. You do not have permission to view this page.");
+    #             window.location.href = "/dashboard";  // Redirect to the desired page after alert
+    #         </script>
+    #     '''    
     if 'username':
         cur = mysql.connection.cursor()
         cur.execute("SELECT * FROM project")
         data = cur.fetchall()
         cur.close()
         print(data)
-        return render_template('projectlist.html', project=data)
+        return render_template('projectlist.html', project=data,user_role=user_role)
     else:
         return redirect(url_for('index'))
 
@@ -377,6 +412,15 @@ def pr0ject():
 def workreport():
     empid = session.get('empid')  # Get empid from session
     username = session.get('username')
+    user_role = session.get('user_role')
+
+    if not username or user_role in ['Employee', 'Trainee']:
+        return '''
+            <script type="text/javascript">
+                alert("Access denied. You do not have permission to view this page.");
+                window.location.href = "/dashboard";  // Redirect to the desired page after alert
+            </script>
+        '''
     
     
     # Fetch profile data based on empid
@@ -419,16 +463,20 @@ def workreport():
 
                 return redirect(url_for('workreportlist'))  # Redirect to work report list after saving
 
-    return render_template('workreport.html', profile=profile, usernames=[u[0] for u in usernames])  # Pass profile and usernames to the template
+    return render_template('workreport.html', profile=profile, usernames=[u[0] for u in usernames], user_role=user_role)  # Pass profile and usernames to the template
 
 
 #workreport-list
 @app.route('/workreportlist', methods=['GET', 'POST'])
 def workreportlist():
+    empid = session.get('empid')  # Get empid from session
     username = session.get('username')
+    user_role = session.get('user_role')
+    
     
     if 'username' in session:  # Check if user is logged in
         empid = session['empid']  # Get empid from session
+        username = session.get('username') #get username from session
         
         cursor = mysql.connection.cursor()
         
@@ -442,7 +490,14 @@ def workreportlist():
         
         # Fetch the logged-in user's time data from the workreport
         cursor.execute("SELECT time FROM workreport WHERE empid = %s", (empid,))
-        time = cursor.fetchone()[0]  # Assuming 'time' is the first column in the fetched result
+        time_result = cursor.fetchone()  # Fetch one result
+
+        # Handle case where no time data is found
+        if time_result is None:
+            
+            time = None  # Handle as needed (set time to None or use a default value)
+        else:
+            time = time_result[0]  # Access the first column if the result is not None
 
         # Fetch filter parameters from the request (POST or GET)
         selected_username = request.form.get('usernameFilter')  # From filter dropdown
@@ -560,7 +615,7 @@ def workreportlist():
         return render_template('workreportlist.html', project=data, usernames=usernames, 
                                disable_filter=disable_filter, selected_username=selected_username,
                                selected_date=selected_date, no_data=no_data, timer_status=timer_status,
-                               pause_reason=pause_reason,check_reason=check_reason)
+                               pause_reason=pause_reason,check_reason=check_reason, username=username, user_role=user_role)
     else:
         return redirect(url_for('index'))
 
@@ -569,6 +624,15 @@ def workreportlist():
 @app.route('/tables')
 def tables():
     username = session.get('username')
+    user_role = session.get('user_role')
+
+    if not username or user_role in ['Employee', 'Trainee']:
+        return '''
+            <script type="text/javascript">
+                alert("Access denied. You do not have permission to view this page.");
+                window.location.href = "/dashboard";  // Redirect to the desired page after alert
+            </script>
+        '''
    
     if 'username' in session:
         cur = mysql.connection.cursor()
@@ -576,7 +640,7 @@ def tables():
         data = cur.fetchall()
         cur.close()
         print(data)
-        return render_template('tables.html', users=data)
+        return render_template('tables.html', users=data,user_role=user_role)
     else:
         return redirect(url_for('index'))
     
@@ -602,7 +666,15 @@ def userworkallocation():
 @app.route('/workallocation', methods=['GET', 'POST'])
 def workallocation():
     username = session.get('username')
-    
+    user_role = session.get('user_role')
+
+    if not username or user_role in ['Employee', 'Trainee']:
+        return '''
+            <script type="text/javascript">
+                alert("Access denied. You do not have permission to view this page.");
+                window.location.href = "/dashboard";  // Redirect to the desired page after alert
+            </script>
+        '''
     cursor = mysql.connection.cursor()
     cursor.execute("SELECT * FROM project")
     project_title1=cursor.fetchall()
@@ -617,7 +689,7 @@ def workallocation():
        cursor.execute('INSERT INTO workallocation VALUES (NULL, %s, %s, %s, %s, %s)', (project_title, username, work_date, work_time, work_description))
        mysql.connection.commit()
        return redirect(url_for('workallocation'))
-    return render_template('workallocation1.html', project=project_title1, users=username1 )
+    return render_template('workallocation1.html', project=project_title1, users=username1, user_role=user_role )
 
 
 @app.route('/migrate_users')
@@ -749,13 +821,14 @@ def validate_password():
 @app.route('/dashboard')
 def dashboard():
     username = session.get('username')
+    user_role = session.get('user_role')
     
     if 'username' in session:
         cur = mysql.connection.cursor()
         cur.execute("SELECT * FROM profile")
         data = cur.fetchall()
         cur.close()
-        return render_template('newone.html', users=data)
+        return render_template('newone.html', users=data, user_role=user_role)
     else:
         return redirect(url_for('index'))
 
@@ -770,7 +843,9 @@ def logout():
 @app.route('/todo', methods=['GET'])
 def todo():
     username = session.get('username')
-   
+    user_role = session.get('user_role')
+
+    
     user_id= session.get('username') 
     category= request.args.get('category')
     username=request.args.get('username')
@@ -779,13 +854,13 @@ def todo():
     cur = mysql.connection.cursor()
     print(user_id)
     if 'username' in session :
-            cur.execute("SELECT * FROM todo WHERE username = %s AND category = 'personal'", (user_id,))  
+            cur.execute("SELECT * FROM todo WHERE username = %s  ", (user_id,))  
     
-    else:
-        cur.execute(("SELECT * FROM todo WHERE category = 'business'", ))
+    # else:
+    #     cur.execute(("SELECT * FROM todo WHERE category = 'business'", ))
     todos = cur.fetchall()
     cur.close()
-    return render_template('todo1.html', todos=todos)
+    return render_template('todo1.html', todos=todos, user_role=user_role)
    
 
 @app.route('/add_todo', methods=['POST'])

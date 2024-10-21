@@ -36,6 +36,8 @@
                     <th class="text-uppercase text-secondary text-md font-weight-bolder opacity-7 ps-2">Sl.No</th>
                     <th class="text-uppercase text-secondary text-md font-weight-bolder opacity-7 ps-2">Employee id
                     </th>
+                    <th class="text-uppercase text-secondary text-md font-weight-bolder opacity-7 ps-2">User name
+                    </th>
                     <th class="text-uppercase text-secondary text-md font-weight-bolder opacity-7 ps-2">Email id</th>
                     <th class="text-uppercase text-secondary text-md font-weight-bolder opacity-7 ps-2">Phone No</th>
 
@@ -51,13 +53,13 @@
                   <tr>
                     <td></td>
 
-                    <td class="justify-content-center">{{ user[0] }}</td>
+                    <td class="justify-content-center">{{ loop.index }}</td>
                     <td class="justify-content-center">
 
                       {{ user[1] }}
 
                     </td>
-                    <!--<td class="justify-content-center">{{ user[1] }}</td>-->
+                    <td class="justify-content-center">{{ user[2] }}</td>
                     <td class="justify-content-center">{{ user[4] }}</td>
                     <td class="justify-content-center">{{ user[7] }}</td>
                     <td class="justify-content-center">{{ user[9] }}</td>

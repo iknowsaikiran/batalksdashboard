@@ -166,17 +166,23 @@
 
 <body class="g-sidenav-show bg-gray-100">
 
-    <div class="min-height-300 bg-primary position-absolute w-100" style="margin:0px; position: fixed ;"></div>
+    <div class="min-height-300 bg-primary position-absolute w-100" style="margin:0px"></div>
 
     <div class="container-fluid py-4" id="workreport">
         <div class="row">
             <div class="col-12">
-                <div class="card mb-4" style="position: fixed; width: 75%;">
-                    
+                <div class="card mb-4">
+                    <div class="marquee text-lg">
+                        Welcome to the Work List Page!
+                    </div>
                     <div class="card-header pb-0">
                         <h6>Work List of {{ session['username']|capitalize }} and Emp.Id is {{session['empid']}}
                         </h6>
-                        <a href="/workreport" class="bg-primary p-2 ">Work-Report</a>
+                        {% if user_role == 'Admin' or user_role == 'Manager' or user_role == 'CEO' or user_role == 'HR'
+                        %}
+                        <a href="/workreport" class="bg-primary p-2 ">Allocate Work</a>
+                        {% else %}
+                        {% endif %}
                     </div>
 
                     <form method="POST" action="{{ url_for('workreportlist') }}">
@@ -223,9 +229,11 @@
                                         <th
                                             class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
                                             Reporting Time</th>
+
                                         <th
                                             class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
                                             TimerZone</th>
+
                                         <th
                                             class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
                                             Status</th>
@@ -236,6 +244,7 @@
                                     <tr>
                                         <td></td>
                                         <td class="justify-content-center">{{ pro[-1] }}</td>
+                                        <!-- pro[-1] is the username from the workreport -->
                                         <td class="justify-content-center">{{ pro[2] }}</td>
                                         <td class="justify-content-center">{{ pro[3] }}</td>
                                         <td class="justify-content-center workdone-column"
@@ -258,6 +267,8 @@
                                         <td class="justify-content-center">{{ pro[5] }}</td>
                                         <td>
                                             <span class="timer-icons">
+                                                <!-- Conditionally render timer icons only if the username matches the logged-in user -->
+                                                {% if pro[-1] == username %}
                                                 {% if pro[6] == 'yet to start' %}
                                                 <i class="fa-solid fa-play play-button"
                                                     onclick="handlePlayButtonClick('{{ pro[4] }}', this);"></i>
@@ -291,7 +302,9 @@
                                                     onclick="pauseTimer('{{ pro[4] }}', this);"
                                                     style="display: none;"></i>
                                                 <i class="fa-solid fa-check check-button"
-                                                    onclick="checkWorkButton('{{ pro[4] }}', this);"></i>
+                                                    onclick="checkWorkButton('{{ pro[4] }}', this);"
+                                                    style="display: none;"></i>
+                                                {% endif %}
                                                 {% endif %}
                                             </span>
                                         </td>
@@ -299,6 +312,7 @@
                                     </tr>
                                     {% endfor %}
                                 </tbody>
+
                             </table>
                             {% endif %}
                             <!-- Modal Structure for Pause Action -->
