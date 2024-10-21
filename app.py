@@ -9,7 +9,7 @@ app.secret_key = 'your_secret_key'
 # MySQL configurations
 app.config['MYSQL_HOST'] = 'localhost'
 app.config['MYSQL_USER'] = 'root'
-app.config['MYSQL_PASSWORD'] = 'Saty@136'
+app.config['MYSQL_PASSWORD'] = '1234@Saikiran'
 app.config['MYSQL_DB'] = 'emp'
 
 mysql = MySQL(app)
@@ -41,15 +41,6 @@ def generate_empid() -> str:
 def adduser():
     username = session.get('username')
     
-    user_role = session.get('user_role')
-
-    if not username or user_role in ['Employee', 'Trainee']:
-        return '''
-            <script type="text/javascript">
-                alert("Access denied. You do not have permission to view this page.");
-                window.location.href = "/dashboard";  // Redirect to the desired page after alert
-            </script>
-        '''
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']

@@ -24956,7 +24956,8 @@ p,
 }
 
 .text-sm {
-  font-size: 15px !important;
+  font-size: 15 
+  px !important;
 }
 
 .text-xs {
@@ -25167,11 +25168,11 @@ p {
 }
 
 .dark-version .sidenav.bg-transparent .navbar-nav .nav-link {
-  color: #fff !important;
+  color: #fff ;
 }
 
 .dark-version .sidenav.bg-transparent .nav .nav-link {
-  color: #fff !important;
+  color: #fff ;
 }
 
 .dark-version .sidenav.bg-white {

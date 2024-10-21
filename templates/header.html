@@ -67,72 +67,11 @@
             display: flex;
             flex-direction: column;
         }
-        
-        /* Responsive Design for Medium Screens and Below */
-        @media (max-width: 992px) {
-            #sidenav-main {
-                width: 240px;
-                overflow-y: auto;
-                position: fixed;
-                left: 0;
-                top: 0;
-                height: 100vh;
-                z-index: 1050;
-            }
-        
-            /* Reduce font size for nav text */
-            #sidenav-main .nav-link-text {
-                font-size: 14px;
-            }
-        
-            /* Reduce icon size */
-            #sidenav-main .icon-sm {
-                width: 1.5rem;
-                height: 1.5rem;
-            }
-        
-            /* Enable sidenav icon for collapsible menu */
-            #iconSidenav {
-                display: block;
-            }
-        }
-        
-        /* Responsive Design for Small Screens (Mobile) */
-        @media (max-width: 768px) {
-            #sidenav-main {
-                width: 100%;
-                height: auto;
-                position: fixed;
-                top: 0;
-                left: 0;
-                z-index: 1050;
-            }
-        
-            /* Initially hide the menu items for better space usage */
-            #sidenav-main ul.navbar-nav {
-                display: none;
-            }
-        
-            /* Show menu items when sidenav is collapsed */
-            #sidenav-main.collapsed ul.navbar-nav {
-                display: block;
-            }
-        
-            /* Enable sidenav toggle icon */
-            #iconSidenav {
-                display: block;
-                font-size: 1.5rem;
-            }
-        
-            /* Make nav text and icons smaller */
-            #sidenav-main .nav-link-text {
-                font-size: 12px;
-            }
-        
-            #sidenav-main .icon-sm {
-                width: 1rem;
-                height: 1rem;
-            }
+
+        .nav-link:hover {
+            background-color: #dad7cd;
+            color: #fff;
+            border-radius: 7px
         }
         
         
@@ -345,9 +284,14 @@
                                 href="javascript:;">Pages</a></li>
                         <li class="breadcrumb-item text-sm text-white active" aria-current="page">Dashboard</li>
                     </ol> -->
+                    
                     <h5 class="font-weight-bolder text-white mb-0" style="font-size: 40px;">Welcome, {{
                         session['username']|capitalize }}!</h5>
+                        <div class="scrolling-text">
+                            <span>Welcome to my website!</span>
+                        </div>
                 </nav>
+                
                 <div class="collapse navbar-collapse mt-sm-0 mt-2 me-md-0 me-sm-4" id="navbar">
                     <div class="ms-md-auto pe-md-3 d-flex align-items-center">
                         <div class="input-group">
@@ -615,6 +559,31 @@
                 this.classList.add('active');
             });
         });
+        // Wait for the document to load
+document.addEventListener("DOMContentLoaded", function () {
+    // Get all nav links
+    const navLinks = document.querySelectorAll('.nav-link');
+
+    // Add click event listener to each nav link
+    navLinks.forEach(link => {
+        link.addEventListener('click', function() {
+            // Remove active class from all links
+            navLinks.forEach(link => link.classList.remove('active'));
+
+            // Add active class to the clicked link
+            this.classList.add('active');
+        });
+    });
+
+    // Highlight the current active link based on the URL
+    const currentUrl = window.location.pathname;
+    navLinks.forEach(link => {
+        if (link.getAttribute('href') === currentUrl) {
+            link.classList.add('active');
+        }
+    });
+});
+
 
     </script>
     <!-- Github buttons -->
