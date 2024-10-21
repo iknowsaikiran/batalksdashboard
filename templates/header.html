@@ -69,10 +69,24 @@
         }
 
         .nav-link:hover {
-            background-color: #dad7cd;
+            background-color: #512888;
             color: #fff;
-            border-radius: 7px
+            border-radius: 12px
         }
+        .nav-link.active {
+    background-color: #e2e8f0; /* Light gray for the active background */
+    border-radius: 12px;       /* Rounded corners */
+    color: #333;               /* Text color for active link */
+}
+
+.nav-link.active .icon-shape {
+    background-color: #f0f4f8; /* Change icon background color */
+}
+
+.nav-link.active i {
+    color: #007bff;  /* Change icon color on active */
+}
+
         
         
     </style>
@@ -583,6 +597,31 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 });
+// Wait for the document to load
+document.addEventListener("DOMContentLoaded", function () {
+    // Get all nav links
+    const navLinks = document.querySelectorAll('.nav-link');
+
+    // Add click event listener to each nav link
+    navLinks.forEach(link => {
+        link.addEventListener('click', function() {
+            // Remove active class from all links
+            navLinks.forEach(link => link.classList.remove('active'));
+
+            // Add active class to the clicked link
+            this.classList.add('active');
+        });
+    });
+
+    // Highlight the current active link based on the URL
+    const currentUrl = window.location.pathname;
+    navLinks.forEach(link => {
+        if (link.getAttribute('href') === currentUrl) {
+            link.classList.add('active');
+        }
+    });
+});
+
 
 
     </script>
