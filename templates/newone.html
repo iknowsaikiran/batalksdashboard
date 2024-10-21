@@ -71,6 +71,33 @@
     border-radius: 5px;
     text-decoration: none;
   } */
+  @media (max-width: 1350px) {
+    .card {
+        height: 130px; /* Decrease the card height */
+    }
+    
+    .card-body {
+        padding: 0.5rem; /* Smaller padding for mobile */
+    }
+
+    .text-sm {
+        font-size: 0.75rem; /* Smaller font size for even better readability */
+    }
+
+    .font-weight-bolder {
+        font-size: 0.875rem; /* Slightly smaller font size */
+    }
+
+    .numbers p {
+        font-size: 0.85rem; /* Adjusted font size for paragraphs */
+    }
+
+    .min-height-300{
+      min-height:200px !important;
+
+    }
+}
+
 </style>
 
 
@@ -279,7 +306,7 @@
                 <div class="col-10">
                   <div class="numbers">
                     <p class="text-sm mb-0 text-uppercase font-weight-bold">
-                      <a href="/todo">To-Do</a>
+                      <a href="/userprofile">My Profile</a>
                     </p>
                     <h5 class="font-weight-bolder">
 
@@ -371,9 +398,7 @@
       </div>
     </div>
   </div>
-  <div class="quote-box">
-    <p id="quote text-bold" style="color:rgba(236,97,35,255)"></p>
-  </div>
+ 
 
   <!--   Core JS Files   -->
   <script src="static/assets/js/core/popper.min.js"></script>
