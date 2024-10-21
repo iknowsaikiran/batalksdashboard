@@ -14,8 +14,9 @@
         .card.mb-4 {
             margin-left: 260px;
         }
-        .fontsz{
-            font-size:16px;
+
+        .fontsz {
+            font-size: 16px;
         }
     </style>
 </head>
@@ -58,7 +59,8 @@
                                 <tbody>
                                     {% for pro in project %}
                                     <tr>
-                                        <td></td>
+                                        <td><button type="button" class="btn btn-primary"
+                                                onclick="allocateUser('{{ pro[0] }}')">Allocate User</button></td>
                                         <td class="justify-content-center ">{{ loop.index }}</td>
                                         <td>
                                             <div class="d-flex flex-column justify-content-center">
