@@ -9,7 +9,7 @@ app.secret_key = 'your_secret_key'
 # MySQL configurations
 app.config['MYSQL_HOST'] = 'localhost'
 app.config['MYSQL_USER'] = 'root'
-app.config['MYSQL_PASSWORD'] = 'Saty@136'
+app.config['MYSQL_PASSWORD'] = '1234@Saikiran'
 app.config['MYSQL_DB'] = 'emp'
 
 mysql = MySQL(app)
@@ -40,7 +40,7 @@ def generate_empid() -> str:
 @app.route('/adduser', methods=['GET', 'POST'])
 def adduser():
     username = session.get('username')
-    
+    user_role=session.get("user_role")
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']

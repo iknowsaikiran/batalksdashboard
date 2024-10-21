@@ -41,10 +41,47 @@
         }
 
         .nav-link:hover {
-            background-color: #dad7cd;
-            color: #fff;
-            border-radius: 7px
+            background-color: rgba(81,40,136,255);
+            color:white;
+            border-radius: 12px;
         }
+        /* scrolling */
+
+        .scrolling-text {
+            width: 100%;
+            color: white;
+            white-space: nowrap;
+            overflow: hidden;
+            box-sizing: border-box;
+        }
+        .scrolling-text span {
+            display: inline-block;
+            font-size: larger;
+            padding-left: 100%;
+            animation: marquee 8s linear infinite;
+        }
+        @keyframes marquee {
+            0% {
+            transform: translate(0, 0);
+            }
+            100% {
+            transform: translate(-100%, 0);
+            }
+        }
+        .nav-link.active {
+    background-color: #e2e8f0; /* Light gray for the active background */
+    border-radius: 12px;       /* Rounded corners */
+    color: #333;               /* Text color for active link */
+}
+
+.nav-link.active .icon-shape {
+    background-color:rgba(81,40,136,255) ; /* Change icon background color */
+}
+
+.nav-link.active i {
+    color: #007bff;  /* Change icon color on active */
+}
+
         
         
     </style>
@@ -236,9 +273,14 @@
                                 href="javascript:;">Pages</a></li>
                         <li class="breadcrumb-item text-sm text-white active" aria-current="page">Dashboard</li>
                     </ol> -->
+                    
                     <h5 class="font-weight-bolder text-white mb-0" style="font-size: 40px;">Welcome, {{
                         session['username']|capitalize }}!</h5>
+                        <div class="scrolling-text">
+                            <span>Welcome to my website!</span>
+                        </div>
                 </nav>
+                
                 <div class="collapse navbar-collapse mt-sm-0 mt-2 me-md-0 me-sm-4" id="navbar">
                     <div class="ms-md-auto pe-md-3 d-flex align-items-center">
                         <div class="input-group">
@@ -506,6 +548,31 @@
                 this.classList.add('active');
             });
         });
+        // Wait for the document to load
+document.addEventListener("DOMContentLoaded", function () {
+    // Get all nav links
+    const navLinks = document.querySelectorAll('.nav-link');
+
+    // Add click event listener to each nav link
+    navLinks.forEach(link => {
+        link.addEventListener('click', function() {
+            // Remove active class from all links
+            navLinks.forEach(link => link.classList.remove('active'));
+
+            // Add active class to the clicked link
+            this.classList.add('active');
+        });
+    });
+
+    // Highlight the current active link based on the URL
+    const currentUrl = window.location.pathname;
+    navLinks.forEach(link => {
+        if (link.getAttribute('href') === currentUrl) {
+            link.classList.add('active');
+        }
+    });
+});
+
 
     </script>
     <!-- Github buttons -->
