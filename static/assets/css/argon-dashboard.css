@@ -26932,17 +26932,15 @@ pre[class*="language-"] {
   position: absolute;
 }
 
-.ps__thumb-y {
+/* .ps__thumb-y {
   background-color: #aaa;
   border-radius: 6px;
   transition: background-color .2s linear, width .2s ease-in-out;
   -webkit-transition: background-color .2s linear, width .2s ease-in-out;
   width: 6px;
-  /* there must be 'right' for ps__thumb-y */
-  right: 2px;
-  /* please don't change 'position' */
-  position: absolute;
-}
+   right: 2px;
+   position: absolute;
+} */
 
 .ps__rail-x:hover>.ps__thumb-x,
 .ps__rail-x:focus>.ps__thumb-x,
