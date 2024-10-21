@@ -49,6 +49,43 @@
             padding: 5px; /* Padding inside input */
             margin-top: 10px; /* Space above input */
         }
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+        .dropdown btn{
+            max-width: 300px;
+        }
+        
+        .dropdown-menu {
+            display: none; /* Hidden by default */
+            position: absolute;
+            background-color: white; /* White background for the dropdown */
+            min-width: 160px; /* Minimum width for the dropdown */
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2); /* Shadow effect */
+            z-index: 1; /* Ensure dropdown appears on top */
+            border-radius: 5px; /* Rounded corners */
+        }
+        
+        .dropdown-menu label {
+            padding: 10px; /* Padding for the checkboxes */
+            cursor: pointer; /* Pointer cursor on hover */
+        }
+        
+        .dropdown-menu label:hover {
+            background-color: #f1f1f1; /* Background color on hover */
+        }
+        
+        .dropdown.show .dropdown-menu {
+            display: block; /* Show the dropdown when toggled */
+        }
+        @media (max-width: 1350px) {
+           
+            .min-height-300{
+              min-height:200px !important;
+        
+            }
+        }
         
     </style>
 </head>
@@ -119,18 +156,23 @@
             <div class="modal-content">
                 <label class="form-label" for="checkReason">Select Users for project:</label>
                 
-                <select name="" id="" class="form-control form-select">
-                    <option value="lsagf">lsagf</option>
-                    <option value="lsagf">lsajbgf</option>
-                </select>
+                <div class="dropdown">
+                    <select name="username" id="project" class="form-control">
+                        <option id="clr" value="select Employee">Select Employee</option>
+                        {% for user in users %}
+                        <option id="clr" value="{{ user[1] }}">{{ user[1] }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+        
                 <div style="padding: 5px;">
-                    <button id="cbtn" class="btn btn-secondary" onclick="closeModal()">Cancel</button>
-                    <button id="cbtn" class="btn btn-primary" onclick="confirmAllocation()">Confirm</button>
+                    <button class="btn btn-secondary" onclick="closeModal()">Cancel</button>
+                    <button class="btn btn-primary" onclick="confirmAllocation()">Confirm</button>
                 </div>
             </div>
         </div>
         
-
 
     </div>
     </main>
@@ -196,6 +238,36 @@
             // Close the modal after confirming
             closeModal();
         }
+        function toggleDropdown() {
+            const dropdownMenu = document.getElementById('dropdownMenu');
+            dropdownMenu.classList.toggle('show');
+        }
+        
+        // Close the dropdown if the user clicks outside of it
+        window.onclick = function(event) {
+            if (!event.target.matches('.dropdown-toggle')) {
+                const dropdowns = document.getElementsByClassName('dropdown-menu');
+                for (let i = 0; i < dropdowns.length; i++) {
+                    const openDropdown = dropdowns[i];
+                    if (openDropdown.classList.contains('show')) {
+                        openDropdown.classList.remove('show');
+                    }
+                }
+            }
+        }
+        
+        function confirmAllocation() {
+            const checkboxes = document.querySelectorAll('#dropdownMenu input[type="checkbox"]');
+            const selectedUsers = [];
+            checkboxes.forEach((checkbox) => {
+                if (checkbox.checked) {
+                    selectedUsers.push(checkbox.value);
+                }
+            });
+            console.log('Selected users:', selectedUsers);
+            closeModal(); // Close the modal after confirming
+        }
+        
 
     </script>
 </body>
