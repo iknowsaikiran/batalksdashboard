@@ -108,9 +108,46 @@ def userprofile():
         print(profile)
     return render_template('userprofile.html', profile=profile)
 
+# Route to update profile data
+@app.route('/update-profile', methods=['POST'])
+def update_profile():
+    username = session.get('username')
+    
+    if not username:
+        return render_template('login.html', alert_message='You need to be logged in to update your profile.')
+
+    # Fetch form data
+    email = request.form.get('email_address')
+    first_name = request.form.get('first_name')
+    last_name = request.form.get('last_name')
+    designation = request.form.get('designation')
+    joining_date = request.form.get('joining_date')
+    address = request.form.get('address')
+    city = request.form.get('city')
+    country = request.form.get('country')
+    postal_code = request.form.get('postal_code')
+
+    # Update the profile in the database
+    cur = mysql.connection.cursor()
+    update_query = """
+        UPDATE profile 
+        SET email_address=%s, first_name=%s, last_name=%s, designation=%s, 
+            joining_date=%s, address=%s, city=%s, country=%s, postal_code=%s
+        WHERE username=%s
+    """
+    cur.execute(update_query, (
+        email, first_name, last_name, designation, joining_date, 
+        address, city, country, postal_code, username
+    ))
+    mysql.connection.commit()  # Save the changes
+    cur.close()
+
+    flash('Profile updated successfully!')
+    return redirect(url_for('userprofile',alert_message='Profile updated successfully!'))  # Redirect back to profile page
+
+
+
 # calendar
-
-
 @app.route('/calendar', methods=['GET', 'POST', 'PUT', 'DELETE'])
 def calendar():
     if request.method == 'GET':
@@ -210,23 +247,22 @@ def payrollmanager():
                 window.location.href = "/dashboard";  // Redirect to the desired page after alert
             </script>
         '''
-   
+
     cur = mysql.connection.cursor()
-    cur.execute("SELECT * FROM profile")
-    data = cur.fetchall()
+    cur.execute("SELECT empid, username, uan, pan, bname, branch, account_number FROM profile")
+    data = cur.fetchall()  # Fetches all relevant fields
     cur.close()
     
     empid = session.get('empid')
 
     cur = mysql.connection.cursor()
-    # Query to fetch the logged-in user's details
     cur.execute("SELECT empid, username FROM profile WHERE empid = %s", (empid,))
-    user = cur.fetchone()  # Fetch a single user's data (empid, username)
+    user = cur.fetchone()
     cur.close()
 
     if request.method == 'POST':
         employee_id = request.form.get('emp_id')
-        username = request.form.get('emp_name')  # Fetching username from the form
+        username = request.form.get('emp_name')
         pay_period_input = request.form.get('pay_period')
         pay_date = request.form.get('pay_date')
         bp = request.form.get('bp')
@@ -237,14 +273,12 @@ def payrollmanager():
         pt = request.form.get('pt')
         pf = request.form.get('pf')
 
-        # Convert pay_period to a complete date
         pay_period = datetime.strptime(pay_period_input + '-01', '%Y-%m-%d').date()
 
         ge = float(bp) + float(hra) + float(ma) + float(ca) + float(oa)
         td = float(pt) + float(pf)
         net_payable = ge - td
 
-        # Insert into payslip table
         cur = mysql.connection.cursor()
         cur.execute(
             "INSERT INTO payslip (employee_id, username, pay_period, pay_date, bp, hra, ma, ca, oa, ge, pt, pf, td, net_payable) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
@@ -255,7 +289,8 @@ def payrollmanager():
 
         return redirect(url_for('payrollmanager'))
 
-    return render_template('payrollmanager.html', users=data, user=user,user_role=user_role)
+    return render_template('payrollmanager.html', users=data, user=user, user_role=user_role)
+
 
 
 #employeeleavemanaement--for emp
@@ -640,7 +675,7 @@ def tables():
         data = cur.fetchall()
         cur.close()
         print(data)
-        return render_template('tables.html', users=data,user_role=user_role)
+        return render_template('tables.html', user_role=user_role)
     else:
         return redirect(url_for('index'))
     

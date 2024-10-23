@@ -270,7 +270,9 @@
                 </div>
                 <div class="payslip-info">
                     <h6>Payslip For the Month</h6>
-                    <h6>&nbsp;&nbsp;&nbsp;June 2023</h6>
+                    <h6>
+                        <input class="form-control" type="month" name="pay_period" id="pay_period" onchange="updatePayPeriod(this.value)">
+                    </h6>
                 </div>
             </div>
             <div class="employee-summary">
@@ -292,39 +294,19 @@
                         <td id="emp-id"></td>
                         <input type="hidden" name="emp_id" id="emp-id-hidden">
                     </tr>
-                    <!-- <tr>
-                        <td>Employee Name</td>
-                        <td>:</td>
-                        <td id="emp-name"></td>
-                        <td rowspan="5" class="net-pay">
-                            <h3 id="net-pay">₹0.00</h3>
-                            <p>Employee Net Pay</p>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Employee ID</td>
-                        <td>:</td>
-                        <td id="emp-id"></td>
-                        <input type="hidden" name="employee_id" id="emp-id">
-                    </tr> -->
-                    <!-- <tr>
-                        <td>Pay Period</td>
-                        <td>:</td>
-                        <td> <input class="form-control" type="month" name="pay_period" id="pay_period">
-                        </td>
-                    </tr> -->
                     <tr>
                         <td>Pay Period</td>
                         <td>:</td>
+                        <!-- Below code where you want to show the selected month -->
                         <td>
-                            <input class="form-control" type="month" name="pay_period" id="pay_period">
+                            <input class="form-control" type="month" name="pay_period_display" id="pay_period_display" readonly>
                         </td>
+
                     </tr>
                     <tr>
                         <td>Pay Date</td>
                         <td>:</td>
-                        <td> <input class="form-control" type="date" name="pay_date" id="pay_date">
-                        </td>
+                        <td><input class="form-control" type="date" name="pay_date" id="pay_date"></td>
                     </tr>
                     <tr>
                         <td>UAN</td>
@@ -359,41 +341,27 @@
                     <table>
                         <tr>
                             <td>Basic Pay</td>
-                            <td> <input class="form-control" type="number" name="bp" id="basic-pay" value=""
-                                    oninput="calculateNetPay()">
-                            </td>
+                            <td><input class="form-control" type="number" name="bp" id="basic-pay" oninput="calculateNetPay()"></td>
                         </tr>
                         <tr>
                             <td>House Rent Allowance (HRA)</td>
-                            <td> <input class="form-control" type="number" name="hra" id="hra" value=""
-                                    oninput="calculateNetPay()">
-                            </td>
+                            <td><input class="form-control" type="number" name="hra" id="hra" oninput="calculateNetPay()"></td>
                         </tr>
                         <tr>
                             <td>Medical Allowance</td>
-                            <td> <input class="form-control" type="number" name="ma" id="medical-allowance" value=""
-                                    oninput="calculateNetPay()">
-                            </td>
+                            <td><input class="form-control" type="number" name="ma" id="medical-allowance" oninput="calculateNetPay()"></td>
                         </tr>
                         <tr>
                             <td>Conveyance Allowance</td>
-                            <td> <input class="form-control" type="number" name="ca" id="conveyance-allowance" value=""
-                                    oninput="calculateNetPay()">
-                            </td>
+                            <td><input class="form-control" type="number" name="ca" id="conveyance-allowance" oninput="calculateNetPay()"></td>
                         </tr>
                         <tr>
                             <td>Other Allowances</td>
-                            <td> <input class="form-control" type="number" name="oa" id="other-allowances" value=""
-                                    oninput="calculateNetPay()">
-                            </td>
+                            <td><input class="form-control" type="number" name="oa" id="other-allowances" oninput="calculateNetPay()"></td>
                         </tr>
                         <tr>
-                            <td>
-                                <h6>Gross Earnings</h6>
-                            </td>
-                            <td>
-                                <h6 id="gross-earnings">₹0.00</h6>
-                            </td>
+                            <td><h6>Gross Earnings</h6></td>
+                            <td><h6 id="gross-earnings">₹0.00</h6></td>
                         </tr>
                     </table>
                 </div>
@@ -402,29 +370,21 @@
                     <table>
                         <tr>
                             <td>Professional Tax</td>
-                            <td> <input class="form-control" type="number" name="pt" id="professional-tax" value=""
-                                    oninput="calculateNetPay()">
-                            </td>
+                            <td><input class="form-control" type="number" name="pt" id="professional-tax" oninput="calculateNetPay()"></td>
                         </tr>
                         <tr>
                             <td>Provident Fund (PF)</td>
-                            <td> <input class="form-control" type="number" name="pf" id="provident-fund" value=""
-                                    oninput="calculateNetPay()">
-                            </td>
+                            <td><input class="form-control" type="number" name="pf" id="provident-fund" oninput="calculateNetPay()"></td>
                         </tr>
                         <tr>
-                            <td>
-                                <h6>Total Deductions</h6>
-                            </td>
-                            <td>
-                                <h6 id="total-deductions">₹0.00</h6>
-                            </td>
+                            <td><h6>Total Deductions</h6></td>
+                            <td><h6 id="total-deductions">₹0.00</h6></td>
                         </tr>
                     </table>
                 </div>
             </div>
             <div class="total-net-payable">
-                <h6>TOTAL NET PAYABLE</h6>
+                <h6>TOTAL NET PAYABLE</h6>     
                 <table>
                     <tr>
                         <td>Gross Earnings</td>
@@ -441,66 +401,89 @@
                 </table>
             </div>
             <div class="form-group">
-                <button class="btn btn-primary btn-sm ms-auto" type="submit">Save
-                </button>
+                <button class="btn btn-primary btn-sm ms-auto" type="submit">Save</button>
             </div>
         </form>
     </div>
 
-    <div class="emp-table-container">
+
+
+    <div class="emp-table-container mt-5">
         <h6>Employee Information</h6>
-        <table>
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Name</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for user in users %}
-                <tr onclick="fillEmployeeDetails('{{ user[0] }}', '{{ user[1] }}')">
-                    <td>{{ user[0] }}</td> 
-                    <td>{{ user[1] }}</td> 
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+        <input type="text" class="form-control" id="searchInput" placeholder="Search for employees..." onkeyup="filterEmployees()">
+        <select id="employeeSelect" onchange="fillEmployeeDetails(this.value)" class="form-select mt-2">
+            <option value="">Select an Employee</option>
+            {% for user in users %}
+            <option value='{
+                "empid": "{{ user[0] }}",
+                "username": "{{ user[1] }}",
+                "uan": "{{ user[2] }}",
+                "pan": "{{ user[3] }}",
+                "bname": "{{ user[4] }}",
+                "branch": "{{ user[5] }}",
+                "account_number": "{{ user[6] }}"
+            }'>{{ user[1] }} (ID: {{ user[0] }})</option>
+            {% endfor %}
+        </select>
     </div>
+    
     <script>
-        function fillEmployeeDetails(id, name, uan, pan, bankName, branch, accountNo) {
-            document.getElementById('emp-id').innerText = id;
-            document.getElementById('emp-name').innerText = name;
-            document.getElementById('emp-id-hidden').value = id;  // Hidden input for form submission
-            document.getElementById('emp-name-hidden').value = name;  // Hidden input for form submission
-            document.getElementById('uan').innerText = uan;
-            document.getElementById('pan').innerText = pan;
-            document.getElementById('bank-name').innerText = bankName;
-            document.getElementById('branch').innerText = branch;
-            document.getElementById('account-no').innerText = accountNo;
+        function fillEmployeeDetails(selectedValue) {
+            if (selectedValue) {
+                const employeeDetails = JSON.parse(selectedValue);
+                document.getElementById('emp-id').innerText = employeeDetails.empid;
+                document.getElementById('emp-name').innerText = employeeDetails.username;
+                document.getElementById('emp-id-hidden').value = employeeDetails.empid;  // Hidden input for form submission
+                document.getElementById('emp-name-hidden').value = employeeDetails.username;  // Hidden input for form submission
+                document.getElementById('uan').innerText = employeeDetails.uan;
+                document.getElementById('pan').innerText = employeeDetails.pan;
+                document.getElementById('bank-name').innerText = employeeDetails.bname;
+                document.getElementById('branch').innerText = employeeDetails.branch;
+                document.getElementById('account-no').innerText = employeeDetails.account_number;
+            }
         }
-
+    
+        function filterEmployees() {
+            const input = document.getElementById('searchInput');
+            const filter = input.value.toLowerCase();
+            const select = document.getElementById('employeeSelect');
+            const options = select.options;
+    
+            for (let i = 1; i < options.length; i++) {
+                const txtValue = options[i].textContent || options[i].innerText;
+                options[i].style.display = txtValue.toLowerCase().includes(filter) ? "" : "none";
+            }
+    
+            // Reset the selection if no options are visible
+            select.value = ""; // Deselects the current option if it does not match
+        }
+    
+        function updatePayPeriod(selectedValue) {
+            document.getElementById('pay_period_display').value = selectedValue;
+        }
         function calculateNetPay() {
-            let basicPay = parseFloat(document.getElementById('basic-pay').value) || 0;
-            let hra = parseFloat(document.getElementById('hra').value) || 0;
-            let medicalAllowance = parseFloat(document.getElementById('medical-allowance').value) || 0;
-            let conveyanceAllowance = parseFloat(document.getElementById('conveyance-allowance').value) || 0;
-            let otherAllowances = parseFloat(document.getElementById('other-allowances').value) || 0;
+            const bp = parseFloat(document.getElementById('basic-pay').value) || 0;
+            const hra = parseFloat(document.getElementById('hra').value) || 0;
+            const ma = parseFloat(document.getElementById('medical-allowance').value) || 0;
+            const ca = parseFloat(document.getElementById('conveyance-allowance').value) || 0;
+            const oa = parseFloat(document.getElementById('other-allowances').value) || 0;
+            const pt = parseFloat(document.getElementById('professional-tax').value) || 0;
+            const pf = parseFloat(document.getElementById('provident-fund').value) || 0;
 
-            let professionalTax = parseFloat(document.getElementById('professional-tax').value) || 0;
-            let providentFund = parseFloat(document.getElementById('provident-fund').value) || 0;
+            const grossEarnings = bp + hra + ma + ca + oa;
+            const totalDeductions = pt + pf;
+            const netPayable = grossEarnings - totalDeductions;
 
-            let grossEarnings = basicPay + hra + medicalAllowance + conveyanceAllowance + otherAllowances;
-            let totalDeductions = professionalTax + providentFund;
-            let netPayable = grossEarnings - totalDeductions;
+            document.getElementById('gross-earnings').innerText = `₹${grossEarnings.toFixed(2)}`;
+            document.getElementById('total-earnings').innerText = `₹${grossEarnings.toFixed(2)}`;
+            document.getElementById('total-deductions').innerText = `₹${totalDeductions.toFixed(2)}`;
+            document.getElementById('total-deductions2').innerText = `₹${totalDeductions.toFixed(2)}`;
+            document.getElementById('net-payable').innerText = `₹${netPayable.toFixed(2)}`;
+            document.getElementById('net-pay').innerText = `₹${netPayable.toFixed(2)}`;
 
-            document.getElementById('gross-earnings').innerText = '₹' + grossEarnings.toFixed(2);
-            document.getElementById('total-deductions').innerText = '₹' + totalDeductions.toFixed(2);
-            document.getElementById('total-earnings').innerText = '₹' + grossEarnings.toFixed(2);
-            document.getElementById('total-deductions2').innerText = '₹' + totalDeductions.toFixed(2);
-            document.getElementById('net-payable').innerText = '₹' + netPayable.toFixed(2);
-            document.getElementById('net-pay').innerText = '₹' + netPayable.toFixed(2);
         }
     </script>
+        
 </body>
 <!--
 

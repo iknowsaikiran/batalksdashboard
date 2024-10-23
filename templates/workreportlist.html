@@ -140,13 +140,6 @@
             padding: 5px;
             margin-top: 10px;
         }
-        @media (max-width: 1350px) {
-           
-            .min-height-300{
-              min-height:200px !important;
-        
-            }
-        }
     </style>
     <style>
         .marquee {
@@ -173,20 +166,19 @@
 
 <body class="g-sidenav-show bg-gray-100">
 
-    <div class="min-height-300 bg-primary position-absolute w-100" style="margin:0px"></div>
+    <div class="min-height-300 bg-primary position-absolute w-100" style="margin:0px; position:fixed"></div>
 
     <div class="container-fluid py-4" id="workreport">
         <div class="row">
             <div class="col-12">
-                <div class="card mb-4">
+                <div class="card mb-4" style="width: 75%;">
                     <div class="marquee text-lg">
                         Welcome to the Work List Page!
                     </div>
                     <div class="card-header pb-0">
                         <h6>Work List of {{ session['username']|capitalize }} and Emp.Id is {{session['empid']}}
                         </h6>
-                        {% if user_role == 'Admin' or user_role == 'Manager' or user_role == 'CEO' or user_role == 'HR'
-                        %}
+                        {% if user_role == 'Admin' or user_role == 'Manager' or user_role == 'CEO' or user_role == 'HR' %}
                         <a href="/workreport" class="bg-primary p-2 ">Allocate Work</a>
                         {% else %}
                         {% endif %}
@@ -308,7 +300,7 @@
                                                 <i class="fa-solid fa-pause pause-button"
                                                     onclick="pauseTimer('{{ pro[4] }}', this);"
                                                     style="display: none;"></i>
-                                                <i class="fa-solid fa-check check-button"
+                                                    <i class="fa-solid fa-check check-button"
                                                     onclick="checkWorkButton('{{ pro[4] }}', this);"
                                                     style="display: none;"></i>
                                                 {% endif %}
